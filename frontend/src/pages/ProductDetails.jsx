@@ -222,7 +222,6 @@ export default function ProductDetails() {
               
               <div style={{ marginTop: '15px', fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
                 {product.weight && <span>⚖️ Weight: <strong>{product.weight}</strong></span>}
-                {product.length && <span>📏 Size: <strong>{product.length}x{product.breadth}x{product.height} cm</strong></span>}
                 {product.stockQuantity > 0 ? (
                   <span style={{ color: '#2ecc71', fontWeight: 600 }}>✅ In Stock ({product.stockQuantity} items)</span>
                 ) : (
