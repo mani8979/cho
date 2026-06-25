@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star } from 'lucide-react';
 import { API_BASE_URL } from '../config';
@@ -7,43 +7,7 @@ export default function Home() {
   const [products, setProducts] = useState([]);
   const [instagramPhotos, setInstagramPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [currentFrame, setCurrentFrame] = useState(1);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const scrollContainerRef = useRef(null);
 
-  // Preload frames for buttery smooth playback on scroll
-  useEffect(() => {
-    for (let i = 1; i <= 240; i++) {
-      const img = new Image();
-      const frameNum = String(i).padStart(3, '0');
-      img.src = `/images/ezgif-frames/ezgif-frame-${frameNum}.jpg`;
-    }
-  }, []);
-
-  // Handle scroll progress mapping to frames
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!scrollContainerRef.current) return;
-      const rect = scrollContainerRef.current.getBoundingClientRect();
-      const scrollTop = -rect.top;
-      const totalScrollHeight = rect.height - window.innerHeight;
-
-      if (totalScrollHeight <= 0) return;
-
-      const progress = Math.min(1, Math.max(0, scrollTop / totalScrollHeight));
-      setScrollProgress(progress);
-
-      const frameIndex = Math.min(240, Math.max(1, Math.round(progress * 239) + 1));
-      setCurrentFrame(frameIndex);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, []);
 
   // Fetch featured products and Instagram photos
   useEffect(() => {
@@ -65,64 +29,7 @@ export default function Home() {
 
   return (
     <main>
-      {/* Scroll-controlled Sequence Hero Section */}
-      <div ref={scrollContainerRef} style={{ height: '220vh', position: 'relative' }}>
-        <div style={{
-          position: 'sticky',
-          top: '0px',
-          height: '100vh',
-          overflow: 'hidden',
-          display: 'flex',
-          alignItems: 'center',
-          background: 'var(--dark-choco)'
-        }}>
-          {/* Active Frame Background (Vibrant & Full Screen) */}
-          <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
-            <img
-              src={`/images/ezgif-frames/ezgif-frame-${String(currentFrame).padStart(3, '0')}.jpg`}
-              alt="Artisan Chocolate Experience"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.style.display = 'none';
-              }}
-            />
-          </div>
-
-          {/* Premium Scroll Indicator */}
-          <div style={{
-            position: 'absolute',
-            bottom: '40px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '8px',
-            color: 'white',
-            opacity: Math.max(0, 1 - scrollProgress * 15),
-            transition: 'opacity 0.15s ease-out',
-            pointerEvents: 'none'
-          }}>
-            <span style={{ 
-              fontSize: '0.9rem', 
-              fontWeight: 700, 
-              textTransform: 'uppercase', 
-              letterSpacing: '3px', 
-              color: 'var(--luxury-gold)',
-              textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)'
-            }}>
-              Scroll to Melt
-            </span>
-            <div className="scroll-mouse" style={{ boxShadow: '0 2px 15px rgba(0,0,0,0.4)', background: 'rgba(0,0,0,0.2)' }}>
-              <div className="scroll-wheel"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Static Hero Section (appears after scroll sequence completion) */}
+      {/* Hero Section */}
       <section className="hero">
         <div className="hero-radial-glow"></div>
         {/* Centered stylized +91 background number */}

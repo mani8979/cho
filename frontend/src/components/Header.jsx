@@ -69,40 +69,10 @@ export default function Header() {
   };
 
   const currentPath = location.pathname;
-  const [scrolledPastIntro, setScrolledPastIntro] = useState(currentPath !== '/');
-
-  useEffect(() => {
-    if (currentPath !== '/') {
-      setScrolledPastIntro(true);
-      return;
-    }
-
-    const handleScroll = () => {
-      // 1.1 * window.innerHeight is the threshold where the sequence is finished
-      const threshold = window.innerHeight * 1.1;
-      setScrolledPastIntro(window.scrollY >= threshold);
-    };
-
-    handleScroll(); // Run immediately on mount or path change
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
-    };
-  }, [currentPath]);
 
   return (
     <>
-      <header 
-        className="header-container"
-        style={{
-          transform: scrolledPastIntro ? 'translateY(0)' : 'translateY(-100%)',
-          opacity: scrolledPastIntro ? 1 : 0,
-          transition: 'transform 0.4s ease, opacity 0.4s ease',
-          pointerEvents: scrolledPastIntro ? 'auto' : 'none'
-        }}
-      >
+      <header className="header-container">
         <div className="container header-inner">
           
           {/* Logo */}
@@ -231,7 +201,7 @@ export default function Header() {
       </div>
       
       {/* Spacer to push content below fixed header */}
-      {currentPath !== '/' && <div style={{ height: '80px' }}></div>}
+      <div style={{ height: '80px' }}></div>
     </>
   );
 }
