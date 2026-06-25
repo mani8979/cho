@@ -64,7 +64,7 @@ export default function AdminDashboard() {
     e.preventDefault();
     setAuthError('');
     try {
-      const res = await fetch('${API_BASE_URL}/api/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
 
     try {
       // Stats
-      const resStats = await fetch('${API_BASE_URL}/api/orders/stats', { headers });
+      const resStats = await fetch(`${API_BASE_URL}/api/orders/stats`, { headers });
       if (resStats.status === 401) {
         handleLogout();
         return;
@@ -107,22 +107,22 @@ export default function AdminDashboard() {
       setStats(dataStats);
 
       // Categories
-      const resCats = await fetch('${API_BASE_URL}/api/categories');
+      const resCats = await fetch(`${API_BASE_URL}/api/categories`);
       const dataCats = await resCats.json();
       setCategories(dataCats);
 
       // Products
-      const resProds = await fetch('${API_BASE_URL}/api/products');
+      const resProds = await fetch(`${API_BASE_URL}/api/products`);
       const dataProds = await resProds.json();
       setProducts(dataProds);
 
       // Reviews
-      const resRevs = await fetch('${API_BASE_URL}/api/reviews', { headers });
+      const resRevs = await fetch(`${API_BASE_URL}/api/reviews`, { headers });
       const dataRevs = await resRevs.json();
       setReviews(dataRevs);
 
       // Instagram
-      const resInsta = await fetch('${API_BASE_URL}/api/instagram');
+      const resInsta = await fetch(`${API_BASE_URL}/api/instagram`);
       const dataInsta = await resInsta.json();
       setInstagramPhotos(dataInsta);
 
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
     const formData = new FormData();
     formData.append('file', file);
 
-    const res = await fetch('${API_BASE_URL}/api/upload', {
+    const res = await fetch(`${API_BASE_URL}/api/upload`, {
       method: 'POST',
       body: formData
     });
@@ -159,7 +159,7 @@ export default function AdminDashboard() {
     if (!catName) return;
 
     try {
-      const res = await fetch('${API_BASE_URL}/api/categories', {
+      const res = await fetch(`${API_BASE_URL}/api/categories`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +232,7 @@ export default function AdminDashboard() {
 
     const url = editingProductId
       ? `${API_BASE_URL}/api/products/${editingProductId}`
-      : '${API_BASE_URL}/api/products';
+      : `${API_BASE_URL}/api/products`;
     
     const method = editingProductId ? 'PUT' : 'POST';
 
@@ -350,7 +350,7 @@ export default function AdminDashboard() {
     if (!instaPath) return;
 
     try {
-      const res = await fetch('${API_BASE_URL}/api/instagram', {
+      const res = await fetch(`${API_BASE_URL}/api/instagram`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
