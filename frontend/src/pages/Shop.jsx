@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Star } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export default function Shop() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,7 +14,7 @@ export default function Shop() {
 
   // Fetch categories and products
   useEffect(() => {
-    fetch('http://localhost:5000/api/categories')
+    fetch(`${API_BASE_URL}/api/categories`)
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error(err));
@@ -21,7 +22,7 @@ export default function Shop() {
 
   useEffect(() => {
     setLoading(true);
-    let url = 'http://localhost:5000/api/products';
+    let url = `${API_BASE_URL}/api/products`;
     const params = [];
     if (categoryFilter) params.push(`category=${encodeURIComponent(categoryFilter)}`);
     if (searchQ) params.push(`q=${encodeURIComponent(searchQ)}`);

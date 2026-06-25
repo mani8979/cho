@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Star } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export default function Home() {
   const [products, setProducts] = useState([]);
@@ -47,8 +48,8 @@ export default function Home() {
   // Fetch featured products and Instagram photos
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:5000/api/products'),
-      fetch('http://localhost:5000/api/instagram')
+      fetch(`${API_BASE_URL}/api/products`),
+      fetch(`${API_BASE_URL}/api/instagram`)
     ])
       .then(([resProd, resInsta]) => Promise.all([resProd.json(), resInsta.json()]))
       .then(([prodData, instaData]) => {

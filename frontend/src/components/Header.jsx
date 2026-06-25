@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, Search, PhoneCall } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -15,7 +16,7 @@ export default function Header() {
 
   // Fetch categories for menu
   useEffect(() => {
-    fetch('http://localhost:5000/api/categories')
+    fetch(`${API_BASE_URL}/api/categories`)
       .then(res => res.json())
       .then(data => setCategories(data))
       .catch(err => console.error(err));
@@ -29,7 +30,7 @@ export default function Header() {
     }
 
     const delayDebounceFn = setTimeout(() => {
-      fetch(`http://localhost:5000/api/products/search-suggestions?q=${encodeURIComponent(searchQuery)}`)
+      fetch(`${API_BASE_URL}/api/products/search-suggestions?q=${encodeURIComponent(searchQuery)}`)
         .then(res => res.json())
         .then(data => setSuggestions(data))
         .catch(err => console.error(err));

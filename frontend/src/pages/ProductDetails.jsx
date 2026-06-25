@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Star, Upload, Check, ChevronRight, MessageSquare, Plus, X } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -34,7 +35,7 @@ export default function ProductDetails() {
   useEffect(() => {
     setLoading(true);
     // Fetch product details
-    fetch(`http://localhost:5000/api/products/${id}`)
+    fetch(`${API_BASE_URL}/api/products/${id}`)
       .then((res) => {
         if (!res.ok) throw new Error('Product not found');
         return res.json();
@@ -50,7 +51,7 @@ export default function ProductDetails() {
       });
 
     // Fetch approved reviews
-    fetch(`http://localhost:5000/api/reviews/product/${id}`)
+    fetch(`${API_BASE_URL}/api/reviews/product/${id}`)
       .then((res) => res.json())
       .then((data) => setReviews(data))
       .catch((err) => console.error(err));
@@ -75,7 +76,7 @@ export default function ProductDetails() {
     formData.append('file', file);
 
     try {
-      const res = await fetch('http://localhost:5000/api/upload', {
+      const res = await fetch(`${API_BASE_URL}/api/upload`, {
         method: 'POST',
         body: formData
       });
@@ -116,7 +117,7 @@ export default function ProductDetails() {
 
     try {
       // Save order in MongoDB
-      const res = await fetch('http://localhost:5000/api/orders', {
+      const res = await fetch(`${API_BASE_URL}/api/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)
@@ -161,7 +162,7 @@ export default function ProductDetails() {
       formData.append('file', file);
 
       try {
-        const res = await fetch('http://localhost:5000/api/upload', {
+        const res = await fetch(`${API_BASE_URL}/api/upload`, {
           method: 'POST',
           body: formData
         });
@@ -196,7 +197,7 @@ export default function ProductDetails() {
     };
 
     try {
-      const res = await fetch('http://localhost:5000/api/reviews', {
+      const res = await fetch(`${API_BASE_URL}/api/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(reviewData)
