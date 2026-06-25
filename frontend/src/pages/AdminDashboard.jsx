@@ -59,6 +59,14 @@ export default function AdminDashboard() {
   const [instaLink, setInstaLink] = useState('');
   const [uploadingInstaImg, setUploadingInstaImg] = useState(false);
 
+  // Review Form State
+  const [reviewProdId, setReviewProdId] = useState('');
+  const [reviewName, setReviewName] = useState('');
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState('');
+  const [reviewImages, setReviewImages] = useState([]);
+  const [uploadingReviewImg, setUploadingReviewImg] = useState(false);
+
   // Login handler
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -386,6 +394,68 @@ export default function AdminDashboard() {
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  // Handle Review Images Upload (Admin)
+  const handleReviewImagesUpload = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    setUploadingReviewImg(true);
+    try {
+      const urls = [];
+      for (const file of files) {
+        const url = await uploadImageToCloudinary(file);
+        urls.push(url);
+      }
+      setReviewImages(prev => [...prev, ...urls]);
+    } catch (err) {
+      console.error(err);
+      alert('Error uploading review images: ' + err.message);
+    } finally {
+      setUploadingReviewImg(false);
+    }
+  };
+
+  // Add Official Admin Review Handler
+  const handleAddAdminReview = async (e) => {
+    e.preventDefault();
+    if (!reviewProdId || !reviewName || !reviewComment) {
+      alert('Please fill in all required fields (Product, Reviewer Name, Message)');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/reviews/admin-review`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          product: reviewProdId,
+          userName: reviewName,
+          rating: Number(reviewRating),
+          comment: reviewComment,
+          reviewImages: reviewImages
+        })
+      });
+
+      if (res.ok) {
+        setReviewProdId('');
+        setReviewName('');
+        setReviewRating(5);
+        setReviewComment('');
+        setReviewImages([]);
+        fetchData();
+        alert('Review added successfully!');
+      } else {
+        const data = await res.json();
+        alert('Failed to add review: ' + (data.message || 'Unknown error'));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error adding review: ' + err.message);
     }
   };
 
@@ -796,60 +866,142 @@ export default function AdminDashboard() {
 
             {/* Reviews Tab */}
             {activeTab === 'reviews' && (
-              <div className="glass-card animate-fade-up">
-                <h3>Customer Reviews Moderation</h3>
-                <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>Approve or reject customer review comments before they go live on details page.</p>
+              <div className="admin-grid animate-fade-up">
+                {/* Write a Review (Admin) */}
+                <div className="glass-card">
+                  <h3 style={{ marginBottom: '10px' }}>Write a Review</h3>
+                  <p style={{ color: 'var(--text-muted)', marginBottom: '25px' }}>Add a customer review directly to a product.</p>
 
-                {reviews.length > 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    {reviews.map((rev) => (
-                      <div key={rev._id} style={{ padding: '20px', border: '1px solid var(--border-light)', borderRadius: '12px', background: 'var(--soft-vanilla)' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
-                          <div>
-                            <span style={{ fontWeight: 700, fontSize: '1.05rem' }}>{rev.userName}</span>
-                            <span style={{ marginLeft: '10px', fontSize: '0.8rem', background: rev.status === 'approved' ? '#2ecc71' : rev.status === 'rejected' ? '#e74c3c' : '#f39c12', color: 'white', padding: '2px 8px', borderRadius: '50px', fontWeight: 600, textTransform: 'uppercase' }}>
-                              {rev.status}
-                            </span>
-                            <div style={{ color: 'var(--luxury-gold)', display: 'flex', gap: '2px', marginTop: '5px' }}>
-                              {[...Array(rev.rating)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
-                            </div>
-                          </div>
-                          
-                          <div style={{ display: 'flex', gap: '10px' }}>
-                            {rev.status !== 'approved' && (
-                              <button onClick={() => handleReviewStatus(rev._id, 'approved')} className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.8rem', background: '#2ecc71' }}>
-                                <Check size={14} /> Approve
-                              </button>
-                            )}
-                            {rev.status !== 'rejected' && (
-                              <button onClick={() => handleReviewStatus(rev._id, 'rejected')} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', color: '#e74c3c', borderColor: '#e74c3c' }}>
-                                <X size={14} /> Reject
-                              </button>
-                            )}
-                            <button onClick={() => handleDeleteReview(rev._id)} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', color: '#d84f5c', borderColor: '#d84f5c' }}>
-                              <Trash2 size={14} /> Delete
-                            </button>
-                          </div>
-                        </div>
+                  <form onSubmit={handleAddAdminReview}>
+                    <div className="form-group">
+                      <label>Select Product *</label>
+                      <select value={reviewProdId} onChange={(e) => setReviewProdId(e.target.value)} required>
+                        <option value="">-- Select Product --</option>
+                        {products.map((p) => (
+                          <option key={p._id} value={p._id}>{p.name}</option>
+                        ))}
+                      </select>
+                    </div>
 
-                        <div style={{ marginTop: '15px' }}>
-                          <p style={{ fontWeight: 500 }}>Product: <span style={{ color: 'var(--luxury-gold)' }}>{rev.product?.name || 'Unknown Product'}</span></p>
-                          <p style={{ fontStyle: 'italic', marginTop: '5px' }}>"{rev.comment}"</p>
-                        </div>
+                    <div className="form-group">
+                      <label>Reviewer Name *</label>
+                      <input type="text" value={reviewName} onChange={(e) => setReviewName(e.target.value)} required placeholder="Anonymous or customer name" />
+                    </div>
 
-                        {rev.reviewImages && rev.reviewImages.length > 0 && (
-                          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
-                            {rev.reviewImages.map((img, idx) => (
-                              <img key={idx} src={img} alt="review" style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }} />
+                    <div className="form-group">
+                      <label>Rating *</label>
+                      <select value={reviewRating} onChange={(e) => setReviewRating(Number(e.target.value))}>
+                        <option value="5">5 Stars (Excellent)</option>
+                        <option value="4">4 Stars (Very Good)</option>
+                        <option value="3">3 Stars (Average)</option>
+                        <option value="2">2 Stars (Poor)</option>
+                        <option value="1">1 Star (Very Poor)</option>
+                      </select>
+                    </div>
+
+                    <div className="form-group">
+                      <label>Message *</label>
+                      <textarea rows="4" value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} required placeholder="Write the feedback here..." />
+                    </div>
+
+                    {/* Image uploads */}
+                    <div className="form-group">
+                      <label>Review Photos (Max 3)</label>
+                      <div className="file-upload-wrap">
+                        <label htmlFor="review-photos" className="file-upload-btn-label">
+                          <Plus size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                          {uploadingReviewImg ? 'Uploading...' : 'Add Photos'}
+                        </label>
+                        <input
+                          type="file"
+                          id="review-photos"
+                          style={{ display: 'none' }}
+                          multiple
+                          onChange={handleReviewImagesUpload}
+                          accept="image/*"
+                          disabled={reviewImages.length >= 3}
+                        />
+                        {reviewImages.length > 0 && (
+                          <div className="review-images" style={{ marginTop: '10px', display: 'flex', gap: '8px' }}>
+                            {reviewImages.map((imgUrl, i) => (
+                              <div key={i} style={{ position: 'relative' }}>
+                                <img src={imgUrl} alt="uploaded" style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }} />
+                                <button
+                                  type="button"
+                                  onClick={() => setReviewImages(prev => prev.filter((_, idx) => idx !== i))}
+                                  style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#d84f5c', color: 'white', border: 'none', borderRadius: '50%', width: '18px', height: '18px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                >
+                                  ✕
+                                </button>
+                              </div>
                             ))}
                           </div>
                         )}
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p>No reviews submitted yet.</p>
-                )}
+                    </div>
+
+                    <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '15px' }}>
+                      Submit Review
+                    </button>
+                  </form>
+                </div>
+
+                {/* Moderation List */}
+                <div className="glass-card">
+                  <h3 style={{ marginBottom: '10px' }}>Customer Reviews Moderation</h3>
+                  <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>Approve or reject customer review comments before they go live on details page.</p>
+
+                  {reviews.length > 0 ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      {reviews.map((rev) => (
+                        <div key={rev._id} style={{ padding: '20px', border: '1px solid var(--border-light)', borderRadius: '12px', background: 'var(--soft-vanilla)' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                            <div>
+                              <span style={{ fontWeight: 700, fontSize: '1.05rem' }}>{rev.userName}</span>
+                              <span style={{ marginLeft: '10px', fontSize: '0.8rem', background: rev.status === 'approved' ? '#2ecc71' : rev.status === 'rejected' ? '#e74c3c' : '#f39c12', color: 'white', padding: '2px 8px', borderRadius: '50px', fontWeight: 600, textTransform: 'uppercase' }}>
+                                {rev.status}
+                              </span>
+                              <div style={{ color: 'var(--luxury-gold)', display: 'flex', gap: '2px', marginTop: '5px' }}>
+                                {[...Array(rev.rating)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
+                              </div>
+                            </div>
+                            
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                              {rev.status !== 'approved' && (
+                                <button onClick={() => handleReviewStatus(rev._id, 'approved')} className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.8rem', background: '#2ecc71' }}>
+                                  <Check size={14} /> Approve
+                                </button>
+                              )}
+                              {rev.status !== 'rejected' && (
+                                <button onClick={() => handleReviewStatus(rev._id, 'rejected')} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', color: '#e74c3c', borderColor: '#e74c3c' }}>
+                                  <X size={14} /> Reject
+                                </button>
+                              )}
+                              <button onClick={() => handleDeleteReview(rev._id)} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', color: '#d84f5c', borderColor: '#d84f5c' }}>
+                                <Trash2 size={14} /> Delete
+                              </button>
+                            </div>
+                          </div>
+
+                          <div style={{ marginTop: '15px' }}>
+                            <p style={{ fontWeight: 500 }}>Product: <span style={{ color: 'var(--luxury-gold)' }}>{rev.product?.name || 'Unknown Product'}</span></p>
+                            <p style={{ fontStyle: 'italic', marginTop: '5px' }}>"{rev.comment}"</p>
+                          </div>
+
+                          {rev.reviewImages && rev.reviewImages.length > 0 && (
+                            <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+                              {rev.reviewImages.map((img, idx) => (
+                                <img key={idx} src={img} alt="review" style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px' }} />
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No reviews submitted yet.</p>
+                  )}
+                </div>
               </div>
             )}
 

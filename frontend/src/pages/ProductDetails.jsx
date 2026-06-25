@@ -23,12 +23,6 @@ export default function ProductDetails() {
 
   // Reviews state
   const [reviews, setReviews] = useState([]);
-  const [newReviewName, setNewReviewName] = useState('');
-  const [newReviewRating, setNewReviewRating] = useState(5);
-  const [newReviewComment, setNewReviewComment] = useState('');
-  const [newReviewImages, setNewReviewImages] = useState([]);
-  const [uploadingReviewImages, setUploadingReviewImages] = useState(false);
-  const [reviewSubmitSuccess, setReviewSubmitSuccess] = useState(false);
 
   const [loading, setLoading] = useState(true);
 
@@ -149,75 +143,7 @@ export default function ProductDetails() {
     }
   };
 
-  // Handle Review Images Upload
-  const handleReviewImagesUpload = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length === 0) return;
 
-    setUploadingReviewImages(true);
-    const uploadedUrls = [];
-
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/upload`, {
-          method: 'POST',
-          body: formData
-        });
-        const data = await res.json();
-        if (data.success) {
-          uploadedUrls.push(data.url);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    setNewReviewImages(prev => [...prev, ...uploadedUrls]);
-    setUploadingReviewImages(false);
-  };
-
-  // Submit Review
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!newReviewName || !newReviewComment) {
-      alert('Please fill in name and review message.');
-      return;
-    }
-
-    const reviewData = {
-      product: product._id,
-      userName: newReviewName,
-      rating: newReviewRating,
-      comment: newReviewComment,
-      reviewImages: newReviewImages
-    };
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/reviews`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reviewData)
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setReviewSubmitSuccess(true);
-        setNewReviewName('');
-        setNewReviewComment('');
-        setNewReviewImages([]);
-        setNewReviewRating(5);
-        // Alert that it's submitted for moderation
-        alert('Thank you! Your review has been submitted for moderation.');
-      } else {
-        alert('Failed to submit review.');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const imagesList = [product.image, ...(product.galleryImages || [])].filter(Boolean);
   const isSaved = product.mrp > product.price;
@@ -386,118 +312,47 @@ export default function ProductDetails() {
         <div style={{ marginTop: '80px', borderTop: '1px solid var(--border-light)', paddingTop: '60px' }}>
           <h2 style={{ fontSize: '2rem', marginBottom: '30px' }}>Customer Reviews</h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '50px' }}>
-            {/* Reviews List */}
-            <div>
-              {reviews.length > 0 ? (
-                <div>
-                  {reviews.map((rev) => (
-                    <div key={rev._id} className="review-card">
-                      <div className="review-header">
-                        <span className="review-user">
-                          {rev.userName}
-                          {rev.isAdmin && (
-                            <span className="official-review-badge">★ Official Review</span>
-                          )}
-                        </span>
-                        <div className="review-rating">
-                          {[...Array(5)].map((_, i) => (
-                            <Star key={i} size={14} fill={i < rev.rating ? "currentColor" : "none"} />
-                          ))}
-                        </div>
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            {reviews.length > 0 ? (
+              <div>
+                {reviews.map((rev) => (
+                  <div key={rev._id} className="review-card">
+                    <div className="review-header">
+                      <span className="review-user">
+                        {rev.userName}
+                        {rev.isAdmin && (
+                          <span className="official-review-badge">★ Official Review</span>
+                        )}
+                      </span>
+                      <div className="review-rating">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={14} fill={i < rev.rating ? "currentColor" : "none"} />
+                        ))}
                       </div>
-                      <p className="review-comment">"{rev.comment}"</p>
-                      {rev.reviewImages && rev.reviewImages.length > 0 && (
-                        <div className="review-images">
-                          {rev.reviewImages.map((imgUrl, idx) => (
-                            <img
-                              key={idx}
-                              src={imgUrl}
-                              alt="review upload"
-                              className="review-img-thumb"
-                              onClick={() => setLightboxImg(imgUrl)}
-                            />
-                          ))}
-                        </div>
-                      )}
                     </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{ textAlign: 'center', padding: '40px', background: 'var(--soft-vanilla)', borderRadius: '15px', color: 'var(--text-muted)' }}>
-                  <MessageSquare size={36} style={{ marginBottom: '15px', opacity: 0.3 }} />
-                  <p>No reviews yet. Share your experience below!</p>
-                </div>
-              )}
-            </div>
-
-            {/* Leave a Review Form */}
-            <div className="glass-card" style={{ height: 'fit-content' }}>
-              <h3 style={{ fontSize: '1.3rem', marginBottom: '20px' }}>Write a Review</h3>
-              
-              <form onSubmit={handleReviewSubmit}>
-                <div className="form-group">
-                  <label>Your Name</label>
-                  <input type="text" value={newReviewName} onChange={(e) => setNewReviewName(e.target.value)} required placeholder="Anonymous or your name" />
-                </div>
-
-                <div className="form-group">
-                  <label>Rating</label>
-                  <select value={newReviewRating} onChange={(e) => setNewReviewRating(Number(e.target.value))}>
-                    <option value="5">5 Stars (Excellent)</option>
-                    <option value="4">4 Stars (Very Good)</option>
-                    <option value="3">3 Stars (Average)</option>
-                    <option value="2">2 Stars (Poor)</option>
-                    <option value="1">1 Star (Very Poor)</option>
-                  </select>
-                </div>
-
-                <div className="form-group">
-                  <label>Your Message</label>
-                  <textarea rows="4" value={newReviewComment} onChange={(e) => setNewReviewComment(e.target.value)} required placeholder="Write your feedback..." />
-                </div>
-
-                {/* Review images upload to Cloudinary */}
-                <div className="form-group">
-                  <label>Review Photos (Max 3)</label>
-                  <div className="file-upload-wrap">
-                    <label htmlFor="review-photos" className="file-upload-btn-label">
-                      <Plus size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                      {uploadingReviewImages ? 'Uploading...' : 'Add Photos'}
-                    </label>
-                    <input
-                      type="file"
-                      id="review-photos"
-                      style={{ display: 'none' }}
-                      multiple
-                      onChange={handleReviewImagesUpload}
-                      accept="image/*"
-                      disabled={newReviewImages.length >= 3}
-                    />
-                    {newReviewImages.length > 0 && (
-                      <div className="review-images" style={{ marginTop: '10px' }}>
-                        {newReviewImages.map((imgUrl, i) => (
-                          <div key={i} style={{ position: 'relative' }}>
-                            <img src={imgUrl} alt="uploaded" className="review-img-thumb" />
-                            <button
-                              type="button"
-                              onClick={() => setNewReviewImages(prev => prev.filter((_, idx) => idx !== i))}
-                              style={{ position: 'absolute', top: '-5px', right: '-5px', background: '#d84f5c', color: 'white', border: 'none', borderRadius: '50%', width: '18px', height: '18px', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyCenter: 'center' }}
-                            >
-                              ✕
-                            </button>
-                          </div>
+                    <p className="review-comment">"{rev.comment}"</p>
+                    {rev.reviewImages && rev.reviewImages.length > 0 && (
+                      <div className="review-images">
+                        {rev.reviewImages.map((imgUrl, idx) => (
+                          <img
+                            key={idx}
+                            src={imgUrl}
+                            alt="review upload"
+                            className="review-img-thumb"
+                            onClick={() => setLightboxImg(imgUrl)}
+                          />
                         ))}
                       </div>
                     )}
                   </div>
-                </div>
-
-                <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '10px' }}>
-                  Submit Review
-                </button>
-              </form>
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div style={{ textAlign: 'center', padding: '40px', background: 'var(--soft-vanilla)', borderRadius: '15px', color: 'var(--text-muted)' }}>
+                <MessageSquare size={36} style={{ marginBottom: '15px', opacity: 0.3 }} />
+                <p>No reviews yet for this product.</p>
+              </div>
+            )}
           </div>
         </div>
 
