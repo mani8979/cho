@@ -20,16 +20,17 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log('MongoDB connection successful.'))
-.catch((err) => {
-  console.error('MongoDB connection error:', err);
-  process.exit(1);
-});
+// Connect to MongoDB (with connection reuse for serverless environment)
+if (mongoose.connection.readyState === 0) {
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('MongoDB connection successful.'))
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+  });
+}
 
 // Mount Routes
 app.use('/api/auth', authRoutes);
