@@ -1226,3 +1226,35 @@ a {
   }
 }
 
+/* Responsive Mobile Search Row & Spacer */
+.header-spacer {
+  height: 80px;
+}
+
+@media (max-width: 992px) {
+  .header-spacer {
+    height: 135px;
+  }
+  .search-bar-wrap {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    padding: 10px 15px;
+    background: rgba(36, 18, 11, 0.95);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+    box-sizing: border-box;
+    display: flex !important;
+  }
+  .search-bar-wrap .search-input {
+    width: 100% !important;
+  }
+  .search-bar-wrap .search-input:focus {
+    width: 100% !important;
+  }
+  .suggestions-box {
+    left: 15px;
+    right: 15px;
+    width: auto !important;
+  }
+}

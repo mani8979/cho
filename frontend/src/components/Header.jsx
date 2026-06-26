@@ -88,48 +88,48 @@ export default function Header() {
           <nav className="nav-menu">
             <Link to="/" className={`nav-link-item ${currentPath === '/' ? 'active' : ''}`}>Home</Link>
             <Link to="/shop" className={`nav-link-item ${currentPath === '/shop' ? 'active' : ''}`}>Shop</Link>
-            
-            {/* Search */}
-            <form onSubmit={handleSearchSubmit} className="search-bar-wrap" ref={suggestionsRef}>
-              <input
-                type="text"
-                placeholder="Search..."
-                className="search-input"
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setShowSuggestions(true);
-                }}
-                onFocus={() => setShowSuggestions(true)}
-              />
-              <button type="submit" className="search-btn">
-                <Search size={18} />
-              </button>
-
-              {/* Suggestions */}
-              {showSuggestions && suggestions.length > 0 && (
-                <div className="suggestions-box">
-                  {suggestions.map((item, index) => (
-                    <div
-                      key={index}
-                      className="suggestion-row"
-                      onClick={() => handleSuggestionClick(item)}
-                    >
-                      {item.image ? (
-                        <img src={item.image.startsWith('http') ? item.image : `/${item.image}`} className="suggestion-img" alt="" />
-                      ) : (
-                        <span className="suggestion-icon">🏷️</span>
-                      )}
-                      <div className="suggestion-details">
-                        <span className="suggestion-name">{item.text}</span>
-                        <span className="suggestion-type">{item.type}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </form>
           </nav>
+
+          {/* Search */}
+          <form onSubmit={handleSearchSubmit} className="search-bar-wrap" ref={suggestionsRef}>
+            <input
+              type="text"
+              placeholder="Search..."
+              className="search-input"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setShowSuggestions(true);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+            />
+            <button type="submit" className="search-btn">
+              <Search size={18} />
+            </button>
+
+            {/* Suggestions */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div className="suggestions-box">
+                {suggestions.map((item, index) => (
+                  <div
+                    key={index}
+                    className="suggestion-row"
+                    onClick={() => handleSuggestionClick(item)}
+                  >
+                    {item.image ? (
+                      <img src={item.image.startsWith('http') ? item.image : `/${item.image}`} className="suggestion-img" alt="" />
+                    ) : (
+                      <span className="suggestion-icon">🏷️</span>
+                    )}
+                    <div className="suggestion-details">
+                      <span className="suggestion-name">{item.text}</span>
+                      <span className="suggestion-type">{item.type}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </form>
 
           {/* Hamburger Menu Mobile */}
           <button className="hamburger" onClick={() => setDrawerOpen(true)}>
@@ -152,21 +152,6 @@ export default function Header() {
             <X size={28} />
           </button>
         </div>
-
-        {/* Mobile Search */}
-        <form onSubmit={handleSearchSubmit} style={{ position: 'relative' }}>
-          <input
-            type="text"
-            placeholder="Search collection..."
-            className="search-input"
-            style={{ width: '100%', paddingRight: '40px' }}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button type="submit" className="search-btn" style={{ right: '15px' }}>
-            <Search size={18} />
-          </button>
-        </form>
 
         <div className="drawer-links">
           <Link to="/" className={`drawer-link-item ${currentPath === '/' ? 'active' : ''}`} onClick={() => setDrawerOpen(false)}>Home</Link>
@@ -201,7 +186,7 @@ export default function Header() {
       </div>
       
       {/* Spacer to push content below fixed header */}
-      <div style={{ height: '80px' }}></div>
+      <div className="header-spacer"></div>
     </>
   );
 }
