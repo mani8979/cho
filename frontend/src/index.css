@@ -246,11 +246,16 @@ a {
 
 .search-btn {
   position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   right: 12px;
   background: transparent;
   border: none;
   color: var(--luxury-gold);
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Suggestions Dropdown */
@@ -1256,5 +1261,8 @@ a {
     left: 15px;
     right: 15px;
     width: auto !important;
+  }
+  .search-bar-wrap .search-btn {
+    right: 25px;
   }
 }
