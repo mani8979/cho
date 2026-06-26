@@ -568,7 +568,7 @@ export default function AdminDashboard() {
                   <form onSubmit={handleAddCategory}>
                     <div className="form-group">
                       <label>Category Name *</label>
-                      <input type="text" value={catName} onChange={(e) => setCatName(e.target.value)} required placeholder="e.g. Whole Spices" />
+                      <input type="text" value={catName} onChange={(e) => setCatName(e.target.value)} required placeholder="e.g. Chocolates" />
                     </div>
 
                     
@@ -637,7 +637,7 @@ export default function AdminDashboard() {
                         {products.map((p) => (
                           <tr key={p._id} style={{ borderBottom: '1px solid var(--border-light)' }}>
                             <td style={{ padding: '12px' }}>
-                              <img src={p.image.startsWith('http') ? p.image : `/${p.image}`} alt={p.name} style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '6px' }} onError={(e)=>{e.target.src="https://placehold.co/50x50?text=Spices"}} />
+                              <img src={p.image.startsWith('http') ? p.image : `/${p.image}`} alt={p.name} style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '6px' }} onError={(e)=>{e.target.src="https://placehold.co/50x50?text=Chocolates"}} />
                             </td>
                             <td style={{ padding: '12px', fontWeight: 600 }}>{p.name}</td>
                             <td style={{ padding: '12px', color: 'var(--luxury-gold)', fontWeight: 500 }}>{p.category}</td>

@@ -166,7 +166,7 @@ export default function ProductDetails() {
                 className="gallery-main-img"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "https://placehold.co/600x600?text=Spices+Gallery";
+                  e.target.src = "https://placehold.co/600x600?text=Chocolates+Gallery";
                 }}
               />
             </div>
@@ -194,7 +194,7 @@ export default function ProductDetails() {
 
           {/* Product Meta */}
           <div className="detail-info">
-            <span className="detail-badge">Munnar Premium Sourced</span>
+            <span className="detail-badge">Premium Handcrafted</span>
             <h1 className="detail-title">{product.name}</h1>
             
             <div className="detail-rating-row">
