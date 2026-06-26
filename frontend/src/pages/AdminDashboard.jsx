@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LayoutDashboard, List, Boxes, PlusCircle, Star, Camera, LogOut, Upload, Trash2, Edit2, Check, X } from 'lucide-react';
+import { LayoutDashboard, List, Boxes, PlusCircle, Plus, Star, Camera, LogOut, Upload, Trash2, Edit2, Check, X } from 'lucide-react';
 import { API_BASE_URL } from '../config';
 
 export default function AdminDashboard() {
