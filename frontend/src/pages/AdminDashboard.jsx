@@ -30,9 +30,6 @@ export default function AdminDashboard() {
 
   // Category Form State
   const [catName, setCatName] = useState('');
-  const [catDisplayOrder, setCatDisplayOrder] = useState('0');
-  const [catMinOrder, setCatMinOrder] = useState('0');
-  const [catMaxOrder, setCatMaxOrder] = useState('0');
   const [catImage, setCatImage] = useState('');
   const [uploadingCatImg, setUploadingCatImg] = useState(false);
 
@@ -46,9 +43,6 @@ export default function AdminDashboard() {
   const [prodDesc, setProdDesc] = useState('');
   const [prodCat, setProdCat] = useState('');
   const [prodWeight, setProdWeight] = useState('');
-  const [prodLength, setProdLength] = useState('10');
-  const [prodBreadth, setProdBreadth] = useState('10');
-  const [prodHeight, setProdHeight] = useState('5');
   const [prodStock, setProdStock] = useState('0');
   const [prodRating, setProdRating] = useState('5.0');
   const [uploadingProdImg, setUploadingProdImg] = useState(false);
@@ -175,18 +169,12 @@ export default function AdminDashboard() {
         },
         body: JSON.stringify({
           name: catName,
-          displayOrder: Number(catDisplayOrder),
-          minOrder: Number(catMinOrder),
-          maxOrder: Number(catMaxOrder),
           image: catImage
         })
       });
 
       if (res.ok) {
         setCatName('');
-        setCatDisplayOrder('0');
-        setCatMinOrder('0');
-        setCatMaxOrder('0');
         setCatImage('');
         fetchData();
         alert('Category added successfully!');
@@ -231,9 +219,6 @@ export default function AdminDashboard() {
       description: prodDesc,
       category: prodCat,
       weight: prodWeight,
-      length: Number(prodLength),
-      breadth: Number(prodBreadth),
-      height: Number(prodHeight),
       stockQuantity: Number(prodStock),
       adminRating: Number(prodRating)
     };
@@ -276,9 +261,6 @@ export default function AdminDashboard() {
     setProdDesc('');
     setProdCat('');
     setProdWeight('');
-    setProdLength('10');
-    setProdBreadth('10');
-    setProdHeight('5');
     setProdStock('0');
     setProdRating('5.0');
   };
@@ -293,9 +275,6 @@ export default function AdminDashboard() {
     setProdDesc(p.description || '');
     setProdCat(p.category);
     setProdWeight(p.weight || '');
-    setProdLength(p.length || '10');
-    setProdBreadth(p.breadth || '10');
-    setProdHeight(p.height || '5');
     setProdStock(p.stockQuantity || '0');
     setProdRating(p.adminRating || '5.0');
     setActiveTab('products-form');
@@ -317,24 +296,7 @@ export default function AdminDashboard() {
     }
   };
 
-  // Review Status Handler (Approve / Reject)
-  const handleReviewStatus = async (id, status) => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/reviews/${id}/status`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ status })
-      });
-      if (res.ok) {
-        fetchData();
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+
 
   // Delete Review Handler
   const handleDeleteReview = async (id) => {
@@ -575,7 +537,6 @@ export default function AdminDashboard() {
                           <tr style={{ borderBottom: '1px solid var(--border-light)', textAlign: 'left' }}>
                             <th style={{ padding: '12px' }}>Image</th>
                             <th style={{ padding: '12px' }}>Name</th>
-                            <th style={{ padding: '12px' }}>Order</th>
                             <th style={{ padding: '12px' }}>Action</th>
                           </tr>
                         </thead>
@@ -586,7 +547,6 @@ export default function AdminDashboard() {
                                 <img src={cat.image || 'https://placehold.co/50x50?text=Cat'} alt={cat.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '6px' }} />
                               </td>
                               <td style={{ padding: '12px', fontWeight: 600 }}>{cat.name}</td>
-                              <td style={{ padding: '12px' }}>{cat.displayOrder}</td>
                               <td style={{ padding: '12px' }}>
                                 <button onClick={() => handleDeleteCategory(cat._id)} style={{ background: 'transparent', border: 'none', color: '#d84f5c', cursor: 'pointer' }}>
                                   <Trash2 size={18} />
@@ -610,18 +570,7 @@ export default function AdminDashboard() {
                       <label>Category Name *</label>
                       <input type="text" value={catName} onChange={(e) => setCatName(e.target.value)} required placeholder="e.g. Whole Spices" />
                     </div>
-                    <div className="form-group">
-                      <label>Display Order</label>
-                      <input type="number" value={catDisplayOrder} onChange={(e) => setCatDisplayOrder(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                      <label>Min Order</label>
-                      <input type="number" value={catMinOrder} onChange={(e) => setCatMinOrder(e.target.value)} />
-                    </div>
-                    <div className="form-group">
-                      <label>Max Order</label>
-                      <input type="number" value={catMaxOrder} onChange={(e) => setCatMaxOrder(e.target.value)} />
-                    </div>
+
                     
                     {/* Cloudinary Category Image upload */}
                     <div className="form-group">
@@ -749,15 +698,7 @@ export default function AdminDashboard() {
                       <input type="number" value={prodStock} onChange={(e) => setProdStock(e.target.value)} />
                     </div>
                     
-                    {/* Dimensions */}
-                    <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                      <label>Dimensions (Length x Breadth x Height cm)</label>
-                      <div style={{ display: 'flex', gap: '15px' }}>
-                        <input type="number" placeholder="Length" value={prodLength} onChange={(e) => setProdLength(e.target.value)} />
-                        <input type="number" placeholder="Breadth" value={prodBreadth} onChange={(e) => setProdBreadth(e.target.value)} />
-                        <input type="number" placeholder="Height" value={prodHeight} onChange={(e) => setProdHeight(e.target.value)} />
-                      </div>
-                    </div>
+
 
                     <div className="form-group">
                       <label>Admin Rating (1.0 to 5.0)</label>
@@ -946,10 +887,10 @@ export default function AdminDashboard() {
                   </form>
                 </div>
 
-                {/* Moderation List */}
+                {/* Product Reviews List */}
                 <div className="glass-card">
-                  <h3 style={{ marginBottom: '10px' }}>Customer Reviews Moderation</h3>
-                  <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>Approve or reject customer review comments before they go live on details page.</p>
+                  <h3 style={{ marginBottom: '10px' }}>Product Reviews</h3>
+                  <p style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>List of reviews currently displayed on the store details page.</p>
 
                   {reviews.length > 0 ? (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -958,25 +899,12 @@ export default function AdminDashboard() {
                           <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
                             <div>
                               <span style={{ fontWeight: 700, fontSize: '1.05rem' }}>{rev.userName}</span>
-                              <span style={{ marginLeft: '10px', fontSize: '0.8rem', background: rev.status === 'approved' ? '#2ecc71' : rev.status === 'rejected' ? '#e74c3c' : '#f39c12', color: 'white', padding: '2px 8px', borderRadius: '50px', fontWeight: 600, textTransform: 'uppercase' }}>
-                                {rev.status}
-                              </span>
                               <div style={{ color: 'var(--luxury-gold)', display: 'flex', gap: '2px', marginTop: '5px' }}>
                                 {[...Array(rev.rating)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
                               </div>
                             </div>
                             
                             <div style={{ display: 'flex', gap: '10px' }}>
-                              {rev.status !== 'approved' && (
-                                <button onClick={() => handleReviewStatus(rev._id, 'approved')} className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.8rem', background: '#2ecc71' }}>
-                                  <Check size={14} /> Approve
-                                </button>
-                              )}
-                              {rev.status !== 'rejected' && (
-                                <button onClick={() => handleReviewStatus(rev._id, 'rejected')} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', color: '#e74c3c', borderColor: '#e74c3c' }}>
-                                  <X size={14} /> Reject
-                                </button>
-                              )}
                               <button onClick={() => handleDeleteReview(rev._id)} className="btn btn-secondary" style={{ padding: '6px 12px', fontSize: '0.8rem', color: '#d84f5c', borderColor: '#d84f5c' }}>
                                 <Trash2 size={14} /> Delete
                               </button>
@@ -999,7 +927,7 @@ export default function AdminDashboard() {
                       ))}
                     </div>
                   ) : (
-                    <p>No reviews submitted yet.</p>
+                    <p>No reviews found.</p>
                   )}
                 </div>
               </div>

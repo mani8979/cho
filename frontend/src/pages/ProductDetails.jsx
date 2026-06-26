@@ -13,10 +13,11 @@ export default function ProductDetails() {
   // Checkout form state
   const [showInquiryForm, setShowInquiryForm] = useState(false);
   const [customerName, setCustomerName] = useState('');
+  const [customerRollNo, setCustomerRollNo] = useState('');
+  const [customerClassSec, setCustomerClassSec] = useState('');
+  const [customerRoomNo, setCustomerRoomNo] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
-  const [customerEmail, setCustomerEmail] = useState('');
-  const [customerAddress, setCustomerAddress] = useState('');
-  const [customerPincode, setCustomerPincode] = useState('');
+  const [customerAltPhone, setCustomerAltPhone] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [paymentScreenshot, setPaymentScreenshot] = useState('');
   const [uploadingScreenshot, setUploadingScreenshot] = useState(false);
@@ -92,10 +93,12 @@ export default function ProductDetails() {
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    if (!customerName || !customerPhone || !customerAddress || !customerPincode) {
+    if (!customerName || !customerPhone || !customerRollNo || !customerClassSec || !customerRoomNo) {
       alert('Please fill in all required fields.');
       return;
     }
+
+    const combinedAddress = `Roll No: ${customerRollNo}, Class/Sec: ${customerClassSec}, Room No: ${customerRoomNo}${customerAltPhone ? `, Alt Phone: ${customerAltPhone}` : ''}`;
 
     const orderData = {
       productName: product.name,
@@ -103,9 +106,9 @@ export default function ProductDetails() {
       phone: customerPhone,
       price: product.price,
       quantity: quantity,
-      address: customerAddress,
-      pincode: customerPincode,
-      email: customerEmail,
+      address: combinedAddress,
+      pincode: '',
+      email: '',
       paymentScreenshot: paymentScreenshot
     };
 
@@ -122,14 +125,14 @@ export default function ProductDetails() {
         // Build WhatsApp text
         let msg = `🛒 *New Order — Love Melt*\n\n`;
         msg += `📦 *Product:* ${product.name}\n`;
-        msg += `🔢 *Quantity:* ${quantity}\n`;
-        msg += `💰 *Total Price:* ₹${(product.price * quantity).toFixed(2)}\n\n`;
+        msg += `💰 *Price:* ₹${product.price.toFixed(2)}\n\n`;
         msg += `👤 *Customer Details:*\n`;
         msg += `• *Name:* ${customerName}\n`;
-        msg += `• *Phone:* ${customerPhone}\n`;
-        if (customerEmail) msg += `• *Email:* ${customerEmail}\n`;
-        msg += `• *Address:* ${customerAddress}\n`;
-        msg += `• *Pincode:* ${customerPincode}\n`;
+        msg += `• *Roll Number:* ${customerRollNo}\n`;
+        msg += `• *Class, Sec:* ${customerClassSec}\n`;
+        msg += `• *Room No:* ${customerRoomNo}\n`;
+        msg += `• *Ph.no:* ${customerPhone}\n`;
+        if (customerAltPhone) msg += `• *Alternative Ph.no:* ${customerAltPhone}\n`;
         msg += `\n📎 *Note:* I will send the payment screenshot now.\nPlease confirm my order. 🙏`;
 
         const waUrl = `https://wa.me/919581108448?text=${encodeURIComponent(msg)}`;
@@ -243,7 +246,7 @@ export default function ProductDetails() {
             {showInquiryForm && (
               <div className="inquiry-panel animate-fade-up">
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                  <h3 style={{ fontSize: '1.4rem' }}>Quick Wholesale Inquiry</h3>
+                  <h3 style={{ fontSize: '1.4rem' }}>WhatsApp Order Details</h3>
                   <button onClick={() => setShowInquiryForm(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
                     <X size={20} />
                   </button>
@@ -259,38 +262,38 @@ export default function ProductDetails() {
                       e.target.src = "https://placehold.co/200x200?text=Payment+QR";
                     }} />
                   </div>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Pay total amount: <strong>₹{(product.price * quantity).toFixed(2)}</strong></p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Pay total amount: <strong>₹{product.price.toFixed(2)}</strong></p>
                 </div>
 
                 <form onSubmit={handlePlaceOrder}>
                   <div className="form-group">
-                    <label>Full Name *</label>
-                    <input type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required placeholder="Enter your full name" />
+                    <label>Name *</label>
+                    <input type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required placeholder="Enter your name" />
                   </div>
                   
                   <div className="form-group">
-                    <label>WhatsApp Mobile *</label>
+                    <label>Roll number *</label>
+                    <input type="text" value={customerRollNo} onChange={(e) => setCustomerRollNo(e.target.value)} required placeholder="Enter roll number" />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Class, sec *</label>
+                    <input type="text" value={customerClassSec} onChange={(e) => setCustomerClassSec(e.target.value)} required placeholder="e.g. CSE-A, Class 10-B" />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Room no *</label>
+                    <input type="text" value={customerRoomNo} onChange={(e) => setCustomerRoomNo(e.target.value)} required placeholder="Hostel room number" />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Ph.no *</label>
                     <input type="tel" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} required maxLength="10" placeholder="10-digit mobile number" />
                   </div>
                   
                   <div className="form-group">
-                    <label>Email Address</label>
-                    <input type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} placeholder="your@email.com" />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Delivery Address *</label>
-                    <textarea rows="3" value={customerAddress} onChange={(e) => setCustomerAddress(e.target.value)} required placeholder="House No, Street, City, State" />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Pincode *</label>
-                    <input type="text" value={customerPincode} onChange={(e) => setCustomerPincode(e.target.value)} required maxLength="6" placeholder="6-digit pincode" />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Quantity *</label>
-                    <input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} required />
+                    <label>Alternative ph.no</label>
+                    <input type="tel" value={customerAltPhone} onChange={(e) => setCustomerAltPhone(e.target.value)} maxLength="10" placeholder="Optional backup number" />
                   </div>
 
                   <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
