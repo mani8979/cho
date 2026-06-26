@@ -16,7 +16,7 @@ export default function Shop() {
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/categories`)
       .then(res => res.json())
-      .then(data => setCategories(data))
+      .then(data => setCategories(Array.isArray(data) ? data : []))
       .catch(err => console.error(err));
   }, []);
 
@@ -34,7 +34,7 @@ export default function Shop() {
     fetch(url)
       .then(res => res.json())
       .then(data => {
-        setProducts(data);
+        setProducts(Array.isArray(data) ? data : []);
         setLoading(false);
       })
       .catch(err => {

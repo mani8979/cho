@@ -48,7 +48,7 @@ export default function ProductDetails() {
     // Fetch approved reviews
     fetch(`${API_BASE_URL}/api/reviews/product/${id}`)
       .then((res) => res.json())
-      .then((data) => setReviews(data))
+      .then((data) => setReviews(Array.isArray(data) ? data : []))
       .catch((err) => console.error(err));
   }, [id, navigate]);
 

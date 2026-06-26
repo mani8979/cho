@@ -111,12 +111,12 @@ export default function AdminDashboard() {
       // Categories
       const resCats = await fetch(`${API_BASE_URL}/api/categories`);
       const dataCats = await resCats.json();
-      setCategories(dataCats);
+      setCategories(Array.isArray(dataCats) ? dataCats : []);
 
       // Products
       const resProds = await fetch(`${API_BASE_URL}/api/products`);
       const dataProds = await resProds.json();
-      setProducts(dataProds);
+      setProducts(Array.isArray(dataProds) ? dataProds : []);
 
       // Reviews
       const resRevs = await fetch(`${API_BASE_URL}/api/reviews`, { headers });
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
       // Instagram
       const resInsta = await fetch(`${API_BASE_URL}/api/instagram`);
       const dataInsta = await resInsta.json();
-      setInstagramPhotos(dataInsta);
+      setInstagramPhotos(Array.isArray(dataInsta) ? dataInsta : []);
 
     } catch (err) {
       console.error(err);

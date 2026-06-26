@@ -18,7 +18,7 @@ export default function Header() {
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/categories`)
       .then(res => res.json())
-      .then(data => setCategories(data))
+      .then(data => setCategories(Array.isArray(data) ? data : []))
       .catch(err => console.error(err));
   }, []);
 
@@ -32,7 +32,7 @@ export default function Header() {
     const delayDebounceFn = setTimeout(() => {
       fetch(`${API_BASE_URL}/api/products/search-suggestions?q=${encodeURIComponent(searchQuery)}`)
         .then(res => res.json())
-        .then(data => setSuggestions(data))
+        .then(data => setSuggestions(Array.isArray(data) ? data : []))
         .catch(err => console.error(err));
     }, 300);
 

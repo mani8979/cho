@@ -20,17 +20,22 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to MongoDB (with connection reuse for serverless environment)
-if (mongoose.connection.readyState === 0) {
-  mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  .then(() => console.log('MongoDB connection successful.'))
-  .catch((err) => {
-    console.error('MongoDB connection error:', err);
-  });
-}
+const dbConnect = require('./utils/dbConnect');
+
+// Express middleware to ensure database connection is established before routing requests
+app.use(async (req, res, next) => {
+  try {
+    await dbConnect();
+    next();
+  } catch (error) {
+    console.error('Database connection middleware failed:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Database connection failure',
+      error: error.message
+    });
+  }
+});
 
 // Mount Routes
 app.use('/api/auth', authRoutes);

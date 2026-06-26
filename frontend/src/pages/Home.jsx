@@ -17,8 +17,8 @@ export default function Home() {
     ])
       .then(([resProd, resInsta]) => Promise.all([resProd.json(), resInsta.json()]))
       .then(([prodData, instaData]) => {
-        setProducts(prodData.slice(0, 8)); // Display 8 featured products
-        setInstagramPhotos(instaData);
+        setProducts(Array.isArray(prodData) ? prodData.slice(0, 8) : []); // Display 8 featured products
+        setInstagramPhotos(Array.isArray(instaData) ? instaData : []);
         setLoading(false);
       })
       .catch(err => {
