@@ -60,7 +60,7 @@ export default function B2B() {
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
             <a
-              href="https://wa.me/919581108448?text=Hi, I'm interested in wholesale rates for Love Melt premium chocolates."
+              href="https://wa.me/919063454241?text=Hi, I'm interested in wholesale rates for Love Melt premium chocolates."
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-premium"

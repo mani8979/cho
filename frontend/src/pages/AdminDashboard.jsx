@@ -121,7 +121,7 @@ export default function AdminDashboard() {
       // Reviews
       const resRevs = await fetch(`${API_BASE_URL}/api/reviews`, { headers });
       const dataRevs = await resRevs.json();
-      setReviews(dataRevs);
+      setReviews(Array.isArray(dataRevs) ? dataRevs : []);
 
       // Instagram
       const resInsta = await fetch(`${API_BASE_URL}/api/instagram`);
@@ -900,7 +900,7 @@ export default function AdminDashboard() {
                             <div>
                               <span style={{ fontWeight: 700, fontSize: '1.05rem' }}>{rev.userName}</span>
                               <div style={{ color: 'var(--luxury-gold)', display: 'flex', gap: '2px', marginTop: '5px' }}>
-                                {[...Array(rev.rating)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
+                                {[...Array(5)].map((_, i) => <Star key={i} size={12} fill={i < rev.rating ? "currentColor" : "none"} />)}
                               </div>
                             </div>
                             

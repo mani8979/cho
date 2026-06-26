@@ -17,7 +17,7 @@ export default function Footer() {
             <a href="https://instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm" target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
               Instagram
             </a>
-            <a href="https://wa.me/919581108448" target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
+            <a href="https://wa.me/919063454241" target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
               WhatsApp
             </a>
           </div>
@@ -38,7 +38,7 @@ export default function Footer() {
           <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '15px', color: 'rgba(253,251,247,0.8)' }}>
             <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Phone size={16} style={{ color: 'var(--luxury-gold)' }} />
-              <span>+91 95811 08448</span>
+              <span>+91 90634 54241</span>
             </li>
             <li style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <MapPin size={16} style={{ color: 'var(--luxury-gold)' }} />

@@ -135,7 +135,7 @@ export default function ProductDetails() {
         if (customerAltPhone) msg += `• *Alternative Ph.no:* ${customerAltPhone}\n`;
         msg += `\n📎 *Note:* I will send the payment screenshot now.\nPlease confirm my order. 🙏`;
 
-        const waUrl = `https://wa.me/919581108448?text=${encodeURIComponent(msg)}`;
+        const waUrl = `https://wa.me/919063454241?text=${encodeURIComponent(msg)}`;
         window.open(waUrl, '_blank');
       } else {
         alert('Failed to place order in system.');
