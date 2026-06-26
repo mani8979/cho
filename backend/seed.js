@@ -76,19 +76,19 @@ const seedProducts = [
 const seedInstagramPhotos = [
   {
     imagePath: 'https://images.unsplash.com/photo-1544908703-97914799dbac?auto=format&fit=crop&w=500&q=80',
-    link: 'https://www.instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm'
+    link: 'https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2'
   },
   {
     imagePath: 'https://images.unsplash.com/photo-1526081347589-7fa3cb41b057?auto=format&fit=crop&w=500&q=80',
-    link: 'https://www.instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm'
+    link: 'https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2'
   },
   {
     imagePath: 'https://images.unsplash.com/photo-1481391319762-47dff72954d9?auto=format&fit=crop&w=500&q=80',
-    link: 'https://www.instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm'
+    link: 'https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2'
   },
   {
     imagePath: 'https://images.unsplash.com/photo-1511381939415-e44015466834?auto=format&fit=crop&w=500&q=80',
-    link: 'https://www.instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm'
+    link: 'https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2'
   }
 ];
 

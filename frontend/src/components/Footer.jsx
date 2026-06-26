@@ -14,7 +14,7 @@ export default function Footer() {
             Experience the gold standard of premium artisan chocolates handcrafted with love.
           </p>
           <div style={{ display: 'flex', gap: '15px' }}>
-            <a href="https://instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm" target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
+            <a href="https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2" target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>
               Instagram
             </a>
             <a href="https://wa.me/919063454241" target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>

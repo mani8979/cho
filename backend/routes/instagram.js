@@ -19,7 +19,7 @@ router.post('/', protectAdmin, async (req, res) => {
     const { imagePath, link } = req.body;
     const newPhoto = new InstagramPhoto({
       imagePath,
-      link: link || 'https://www.instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm'
+      link: link || 'https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2'
     });
     const saved = await newPhoto.save();
     res.status(201).json(saved);

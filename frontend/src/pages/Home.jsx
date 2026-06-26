@@ -124,7 +124,7 @@ export default function Home() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '20px' }}>
               {instagramPhotos.map((photo) => (
                 <a
-                  href={photo.link || 'https://www.instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm'}
+                  href={photo.link || 'https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2'}
                   target="_blank"
                   rel="noopener noreferrer"
                   key={photo._id}
@@ -150,7 +150,7 @@ export default function Home() {
             
             <div style={{ textAlign: 'center', marginTop: '40px' }}>
               <a
-                href="https://www.instagram.com/pallom369?igsh=eXcwZTdqejFlcnVm"
+                href="https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-secondary"
