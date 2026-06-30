@@ -123,18 +123,18 @@ export default function ProductDetails() {
 
       if (result.success) {
         // Build WhatsApp text
-        let msg = `🛒 *New Order — Love Melt*\n\n`;
-        msg += `📦 *Product:* ${product.name}\n`;
-        msg += `💰 *Price:* ₹${product.price.toFixed(2)}\n\n`;
-        msg += `👤 *Customer Details:*\n`;
-        msg += `• *Name:* ${customerName}\n`;
-        msg += `• *Roll Number:* ${customerRollNo}\n`;
-        msg += `• *Class, Sec:* ${customerClassSec}\n`;
-        msg += `• *Room No:* ${customerRoomNo}\n`;
-        msg += `• *Ph.no:* ${customerPhone}\n`;
-        if (customerAltPhone) msg += `• *Alternative Ph.no:* ${customerAltPhone}\n`;
-        if (paymentScreenshot) msg += `• *Payment Receipt:* ${paymentScreenshot}\n`;
-        msg += `\n📎 *Note:* Please confirm my order. 🙏`;
+        let msg = `New Order — Love Melt\n\n`;
+        msg += `Product: ${product.name}\n`;
+        msg += `Price: Rs. ${product.price.toFixed(2)}\n\n`;
+        msg += `Customer Details:\n`;
+        msg += `- Name: ${customerName}\n`;
+        msg += `- Roll Number: ${customerRollNo}\n`;
+        msg += `- Class, Sec: ${customerClassSec}\n`;
+        msg += `- Room No: ${customerRoomNo}\n`;
+        msg += `- Phone: ${customerPhone}\n`;
+        if (customerAltPhone) msg += `- Alternative Phone: ${customerAltPhone}\n`;
+        if (paymentScreenshot) msg += `- Payment Receipt: ${paymentScreenshot}\n`;
+        msg += `\nNote: Please confirm my order.`;
 
         const waUrl = `https://wa.me/919063454241?text=${encodeURIComponent(msg)}`;
         window.open(waUrl, '_blank');
