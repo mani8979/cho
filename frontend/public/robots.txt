@@ -1,0 +1,7 @@
+# Crawling rules for search engine bots
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# Point search engines to the sitemap
+Sitemap: https://love-melt.vercel.app/sitemap.xml

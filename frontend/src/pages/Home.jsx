@@ -112,6 +112,28 @@ export default function Home() {
 
 
 
+
+      {/* Diet & Healthy Chocolate Section */}
+      <section className="section" style={{ background: 'rgba(255, 255, 255, 0.02)', borderTop: '1px solid rgba(255, 255, 255, 0.05)', borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+        <div className="container" style={{ maxWidth: '800px', textAlign: 'center', padding: '40px 20px' }}>
+          <div className="home-section-title">
+            <p>Guilt-Free Treats</p>
+            <h2>Love Melt Diet Collection</h2>
+          </div>
+          <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: 'var(--text-muted)', marginBottom: '25px' }}>
+            At <strong>Love Melt</strong>, we believe that choosing a healthy lifestyle shouldn't mean giving up your favorite indulgence. Our specialized <strong>Love Melt Diet</strong> range is meticulously crafted for chocolate lovers seeking sugar-free, low-carb, and keto-friendly alternatives.
+          </p>
+          <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: 'var(--text-muted)', marginBottom: '30px' }}>
+            Whether you are on a strict keto diet, monitoring sugar intake, or simply seeking wholesome guilt-free desserts, our premium <strong>diet love melt</strong> chocolates deliver the same velvety, rich, and decadent taste as our classic artisan collections. Indulge intelligently, maintain your diet, and satisfy your cravings with zero compromises.
+          </p>
+          <div>
+            <Link to="/shop" className="btn btn-secondary" style={{ borderRadius: '50px', padding: '12px 35px', borderColor: 'var(--luxury-gold)', color: 'var(--luxury-gold)' }}>
+              Explore Diet Chocolates
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Instagram Feed Section */}
       {instagramPhotos.length > 0 && (
         <section className="section">
