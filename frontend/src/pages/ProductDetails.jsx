@@ -93,8 +93,8 @@ export default function ProductDetails() {
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    if (!customerName || !customerPhone || !customerRollNo || !customerClassSec || !customerRoomNo) {
-      alert('Please fill in all required fields.');
+    if (!customerName || !customerPhone || !customerRollNo || !customerClassSec || !customerRoomNo || !paymentScreenshot) {
+      alert('Please fill in all required fields and upload the payment screenshot.');
       return;
     }
 
@@ -133,7 +133,8 @@ export default function ProductDetails() {
         msg += `• *Room No:* ${customerRoomNo}\n`;
         msg += `• *Ph.no:* ${customerPhone}\n`;
         if (customerAltPhone) msg += `• *Alternative Ph.no:* ${customerAltPhone}\n`;
-        msg += `\n📎 *Note:* I will send the payment screenshot now.\nPlease confirm my order. 🙏`;
+        if (paymentScreenshot) msg += `• *Payment Receipt:* ${paymentScreenshot}\n`;
+        msg += `\n📎 *Note:* Please confirm my order. 🙏`;
 
         const waUrl = `https://wa.me/919063454241?text=${encodeURIComponent(msg)}`;
         window.open(waUrl, '_blank');
@@ -294,6 +295,27 @@ export default function ProductDetails() {
                   <div className="form-group">
                     <label>Alternative ph.no</label>
                     <input type="tel" value={customerAltPhone} onChange={(e) => setCustomerAltPhone(e.target.value)} maxLength="10" placeholder="Optional backup number" />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Payment Screenshot *</label>
+                    <div className="file-upload-wrap">
+                      <label htmlFor="screenshot-upload" className="file-upload-btn-label">
+                        <Upload size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                        {uploadingScreenshot ? 'Uploading...' : paymentScreenshot ? 'Screenshot Uploaded ✅' : 'Upload Payment Screenshot'}
+                      </label>
+                      <input
+                        type="file"
+                        id="screenshot-upload"
+                        style={{ display: 'none' }}
+                        onChange={handleScreenshotUpload}
+                        accept="image/*"
+                        required
+                      />
+                    </div>
+                    {paymentScreenshot && (
+                      <img src={paymentScreenshot.startsWith('http') ? paymentScreenshot : `/${paymentScreenshot}`} alt="Payment Preview" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', marginTop: '10px' }} />
+                    )}
                   </div>
 
                   <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
