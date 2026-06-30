@@ -3,9 +3,10 @@ const router = express.Router();
 const Product = require('../models/Product');
 const Category = require('../models/Category');
 const { protectAdmin } = require('./auth');
+const { cacheMiddleware, invalidateCache } = require('../utils/cache');
 
 // Get search suggestions (matches search-suggestions.php logic)
-router.get('/search-suggestions', async (req, res) => {
+router.get('/search-suggestions', cacheMiddleware(300), async (req, res) => {
   try {
     const q = req.query.q ? req.query.q.trim() : '';
     if (q.length < 1) {
@@ -58,7 +59,7 @@ router.get('/search-suggestions', async (req, res) => {
 });
 
 // Get all products (with category filter and search search query)
-router.get('/', async (req, res) => {
+router.get('/', cacheMiddleware(300), async (req, res) => {
   try {
     const { category, q } = req.query;
     const filter = {};
@@ -83,7 +84,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get single product details
-router.get('/:id', async (req, res) => {
+router.get('/:id', cacheMiddleware(300), async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
@@ -121,6 +122,7 @@ router.post('/', protectAdmin, async (req, res) => {
     });
 
     const saved = await newProduct.save();
+    invalidateCache(['/api/products']);
     res.status(201).json(saved);
   } catch (error) {
     res.status(400).json({ message: 'Bad request', error: error.message });
@@ -156,6 +158,7 @@ router.put('/:id', protectAdmin, async (req, res) => {
     product.meeshoLink = meeshoLink !== undefined ? meeshoLink : product.meeshoLink;
 
     const updated = await product.save();
+    invalidateCache(['/api/products']);
     res.json(updated);
   } catch (error) {
     res.status(400).json({ message: 'Bad request', error: error.message });
@@ -169,6 +172,7 @@ router.delete('/:id', protectAdmin, async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
+    invalidateCache(['/api/products']);
     res.json({ message: 'Product deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

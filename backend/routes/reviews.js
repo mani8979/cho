@@ -2,9 +2,17 @@ const express = require('express');
 const router = express.Router();
 const Review = require('../models/Review');
 const { protectAdmin } = require('./auth');
+const { cacheMiddleware, invalidateCache } = require('../utils/cache');
+const rateLimiter = require('../utils/rateLimiter');
+
+const reviewRateLimiter = rateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 15,
+  message: 'Too many review submissions, please try again in 15 minutes.'
+});
 
 // Get all approved reviews for a product
-router.get('/product/:productId', async (req, res) => {
+router.get('/product/:productId', cacheMiddleware(60), async (req, res) => {
   try {
     const reviews = await Review.find({
       product: req.params.productId,
@@ -17,7 +25,7 @@ router.get('/product/:productId', async (req, res) => {
 });
 
 // Submit a review (Public)
-router.post('/', async (req, res) => {
+router.post('/', reviewRateLimiter, async (req, res) => {
   try {
     const { product, userName, rating, comment, reviewImages } = req.body;
     
@@ -32,6 +40,7 @@ router.post('/', async (req, res) => {
     });
 
     const saved = await newReview.save();
+    invalidateCache(['/api/reviews', '/api/products']);
     res.status(201).json(saved);
   } catch (error) {
     res.status(400).json({ message: 'Bad request', error: error.message });
@@ -54,6 +63,7 @@ router.post('/admin-review', protectAdmin, async (req, res) => {
     });
 
     const saved = await newReview.save();
+    invalidateCache(['/api/reviews', '/api/products']);
     res.status(201).json(saved);
   } catch (error) {
     res.status(400).json({ message: 'Bad request', error: error.message });
@@ -87,6 +97,7 @@ router.put('/:id/status', protectAdmin, async (req, res) => {
 
     review.status = status;
     const updated = await review.save();
+    invalidateCache(['/api/reviews', '/api/products']);
     res.json(updated);
   } catch (error) {
     res.status(400).json({ message: 'Bad request', error: error.message });
@@ -100,6 +111,7 @@ router.delete('/:id', protectAdmin, async (req, res) => {
     if (!review) {
       return res.status(404).json({ message: 'Review not found' });
     }
+    invalidateCache(['/api/reviews', '/api/products']);
     res.json({ message: 'Review deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

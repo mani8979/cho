@@ -20,6 +20,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const rateLimiter = require('./utils/rateLimiter');
+
+// Global Rate Limiter: Limit to 500 requests per 15 minutes per IP
+app.use('/api', rateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 500,
+  message: 'Too many requests from this IP, please try again in 15 minutes.'
+}));
+
 const dbConnect = require('./utils/dbConnect');
 
 // Express middleware to ensure database connection is established before routing requests

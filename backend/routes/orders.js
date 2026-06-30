@@ -5,9 +5,16 @@ const Product = require('../models/Product');
 const Category = require('../models/Category');
 const Review = require('../models/Review');
 const { protectAdmin } = require('./auth');
+const rateLimiter = require('../utils/rateLimiter');
+
+const orderRateLimiter = rateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: 'Too many order attempts from this IP, please try again in 15 minutes.'
+});
 
 // Create new order (Public)
-router.post('/', async (req, res) => {
+router.post('/', orderRateLimiter, async (req, res) => {
   try {
     const { productName, productId, phone, price, quantity, address, pincode, email, paymentScreenshot } = req.body;
     
