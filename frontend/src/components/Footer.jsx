@@ -52,6 +52,26 @@ export default function Footer() {
 
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '15px', fontSize: '0.85rem', color: 'rgba(253,251,247,0.5)' }}>
         <p>&copy; {new Date().getFullYear()} Love Melt Chocolates. All Rights Reserved.</p>
+        <p style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span>Developed by <strong style={{ color: 'white' }}>Kalla Manibabu</strong></span>
+          <a 
+            href="https://wa.me/919581108448" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              gap: '5px', 
+              color: 'var(--luxury-gold)', 
+              fontWeight: 500 
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" style={{ verticalAlign: 'middle' }}>
+              <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984a9.96 9.96 0 001.333 4.993L2 22l5.13-1.343a9.921 9.921 0 004.877 1.28c5.508 0 9.99-4.478 9.99-9.986 0-2.67-1.037-5.178-2.924-7.065A9.912 9.912 0 0012.012 2zm5.781 14.282c-.25.705-1.464 1.34-2.006 1.425-.494.077-1.13.136-3.284-.753-2.753-1.137-4.502-3.93-4.64-4.113-.138-.182-1.12-1.488-1.12-2.84 0-1.35.704-2.013.955-2.274.25-.262.545-.327.728-.327.182 0 .363.002.522.01.168.01.394-.064.618.476.223.54.764 1.86.83 1.992.066.132.11.285.022.464-.088.178-.132.29-.263.443-.132.152-.276.339-.395.454-.131.129-.268.27-.116.53.152.261.677 1.114 1.454 1.808.997.893 1.834 1.17 2.1 1.3.264.13.417.11.572-.07.155-.178.66-.767.836-1.026.177-.258.354-.216.598-.126.244.09 1.55.73 1.815.86.265.132.442.197.508.31.066.113.066.657-.184 1.362z" />
+            </svg>
+            +91 9581108448
+          </a>
+        </p>
         <p style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
           <Shield size={12} /> Crafted for Chocolate Luxury
         </p>
