@@ -238,8 +238,22 @@ export default function ProductDetails() {
 
             {/* Buy/Inquiry Button */}
             {!showInquiryForm && (
-              <button className="btn btn-premium" onClick={() => setShowInquiryForm(true)} style={{ alignSelf: 'flex-start' }}>
-                Buy on WhatsApp
+              <button 
+                className="btn btn-premium" 
+                onClick={() => setShowInquiryForm(true)} 
+                disabled={product.stockQuantity <= 0}
+                style={{ 
+                  alignSelf: 'flex-start',
+                  ...(product.stockQuantity <= 0 ? {
+                    background: '#ccc',
+                    color: '#666',
+                    cursor: 'not-allowed',
+                    boxShadow: 'none',
+                    opacity: 0.7
+                  } : {})
+                }}
+              >
+                {product.stockQuantity <= 0 ? 'Out of Stock' : 'Buy on WhatsApp'}
               </button>
             )}
 
