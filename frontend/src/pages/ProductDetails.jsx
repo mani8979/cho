@@ -52,6 +52,60 @@ export default function ProductDetails() {
       .catch((err) => console.error(err));
   }, [id, navigate]);
 
+  // Set dynamic page title, description, and Product JSON-LD Schema
+  useEffect(() => {
+    if (product) {
+      document.title = `${product.name} | Love Melt Premium Chocolates`;
+
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', `${product.name} - ${product.description ? product.description.substring(0, 150) + '...' : 'Premium handcrafted chocolate from Love Melt.'}`);
+      }
+
+      // Dynamic JSON-LD for Product Schema
+      const schemaId = 'product-jsonld';
+      let scriptTag = document.getElementById(schemaId);
+      if (!scriptTag) {
+        scriptTag = document.createElement('script');
+        scriptTag.id = schemaId;
+        scriptTag.type = 'application/ld+json';
+        document.head.appendChild(scriptTag);
+      }
+
+      const productSchema = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": product.name,
+        "image": [
+          product.image.startsWith('http') ? product.image : `https://love-melt.vercel.app/${product.image}`
+        ],
+        "description": product.description,
+        "offers": {
+          "@type": "Offer",
+          "url": `https://love-melt.vercel.app/product/${product._id}`,
+          "priceCurrency": "INR",
+          "price": product.price,
+          "itemCondition": "https://schema.org/NewCondition",
+          "availability": product.stockQuantity > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": product.adminRating || 5.0,
+          "reviewCount": reviews.length || 1
+        }
+      };
+
+      scriptTag.text = JSON.stringify(productSchema);
+
+      return () => {
+        const tag = document.getElementById(schemaId);
+        if (tag) {
+          tag.remove();
+        }
+      };
+    }
+  }, [product, reviews]);
+
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '150px 0' }}>
@@ -181,7 +235,7 @@ export default function ProductDetails() {
                   >
                     <img
                       src={img.startsWith('http') ? img : `/${img}`}
-                      alt="thumbnail"
+                      alt={`${product.name} Gallery Image ${i + 1}`}
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "https://placehold.co/100x100?text=Thumb";

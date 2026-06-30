@@ -12,6 +12,49 @@ export default function Shop() {
   const categoryFilter = searchParams.get('category') || '';
   const searchQ = searchParams.get('q') || '';
 
+  // Dynamic Title, Description, and Collection Page JSON-LD Schema
+  useEffect(() => {
+    const title = categoryFilter
+      ? `${categoryFilter} | Love Melt Premium Chocolates`
+      : searchQ
+      ? `Search: "${searchQ}" | Love Melt Chocolates`
+      : "Shop Premium Artisan & Diet Chocolates | Love Melt";
+    
+    document.title = title;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', `Explore our exquisite chocolate catalog. Shop handcrafted ${categoryFilter || 'artisan truffles, premium dark and milk chocolate bars, and healthy diet love melt collections'}.`);
+    }
+
+    // Dynamic JSON-LD for Collection Page
+    const schemaId = 'collection-jsonld';
+    let scriptTag = document.getElementById(schemaId);
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = schemaId;
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+
+    const collectionSchema = {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": categoryFilter ? `${categoryFilter} Collection` : "Luxury Chocolates Catalog",
+      "description": `Shop handcrafted premium chocolates from Love Melt, featuring our signature ${categoryFilter || 'artisan truffles and diet chocolate collections'}.`,
+      "url": window.location.href
+    };
+
+    scriptTag.text = JSON.stringify(collectionSchema);
+
+    return () => {
+      const tag = document.getElementById(schemaId);
+      if (tag) {
+        tag.remove();
+      }
+    };
+  }, [categoryFilter, searchQ]);
+
   // Fetch categories and products
   useEffect(() => {
     fetch(`${API_BASE_URL}/api/categories`)

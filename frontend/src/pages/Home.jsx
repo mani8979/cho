@@ -9,6 +9,15 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
 
+  // Set document title and meta description
+  useEffect(() => {
+    document.title = "Love Melt | Premium Artisan & Diet Chocolates";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Discover Love Melt, the gold standard of premium artisan chocolates. Indulge in our exquisite truffles, velvety chocolate bars, and custom guilt-free diet love melt options, including keto-friendly and sugar-free treats.');
+    }
+  }, []);
+
   // Fetch featured products and Instagram photos
   useEffect(() => {
     Promise.all([

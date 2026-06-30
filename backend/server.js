@@ -11,6 +11,7 @@ const reviewRoutes = require('./routes/reviews');
 const instagramRoutes = require('./routes/instagram');
 const orderRoutes = require('./routes/orders');
 const uploadRoutes = require('./routes/upload');
+const sitemapRoutes = require('./routes/sitemap');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -54,6 +55,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/instagram', instagramRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/sitemap', sitemapRoutes);
 
 // Health check route
 app.get('/api/health', (req, res) => {

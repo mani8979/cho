@@ -49,7 +49,48 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Static SEO Fallback content for search engines (replaced by React on mount) -->
+      <header style="display:none;">
+        <img src="/images/love_melt_logo.jpg" alt="Love Melt Logo" />
+        <h1>Love Melt | Premium Artisan &amp; Diet Chocolates</h1>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/shop">Shop Premium Chocolates</a>
+        </nav>
+      </header>
+      <main style="display:none;">
+        <section>
+          <h2>The Art of Melting Hearts - Love Melt Premium Chocolates</h2>
+          <p>Discover Love Melt, the gold standard of premium artisan chocolates handcrafted with love. Experience our signature dark cocoa truffles, velvety milk chocolate bars, and custom guilt-free diet love melt options, including keto-friendly and sugar-free treats designed to perfectly fit your love melt diet.</p>
+          <a href="/shop">Explore Our Collections</a>
+        </section>
+        <section>
+          <h2>Artisan Chocolate &amp; Diet Chocolate Collections</h2>
+          <ul>
+            <li>
+              <h3>Truffles &amp; Bonbons</h3>
+              <p>Handcrafted 70% dark chocolate truffles with a silky smooth Belgian ganache center, dusted with premium cocoa powder.</p>
+            </li>
+            <li>
+              <h3>Artisan Chocolate Bars</h3>
+              <p>Rich roasted hazelnuts in milk chocolate, pistachio white chocolate, and premium single-origin cacao bars.</p>
+            </li>
+            <li>
+              <h3>Diet Love Melt Series</h3>
+              <p>Sugar-free, keto-friendly healthy chocolates designed for your love melt diet without compromising on luxury taste.</p>
+            </li>
+            <li>
+              <h3>Luxury Gift Assortments</h3>
+              <p>Gold-embossed gift boxes featuring an exquisite selection of gourmet chocolates, perfect for gifting and corporate partnerships.</p>
+            </li>
+          </ul>
+        </section>
+      </main>
+      <footer style="display:none;">
+        <p>&copy; Love Melt Chocolates. Contact: +91 90634 54241 | Visakhapatnam, Andhra Pradesh, India</p>
+      </footer>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
