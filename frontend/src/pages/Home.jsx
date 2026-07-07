@@ -26,7 +26,7 @@ export default function Home() {
     ])
       .then(([resProd, resInsta]) => Promise.all([resProd.json(), resInsta.json()]))
       .then(([prodData, instaData]) => {
-        setProducts(Array.isArray(prodData) ? prodData.slice(0, 8) : []); // Display 8 featured products
+        setProducts(Array.isArray(prodData) ? prodData.slice(0, 4) : []); // Display 4 featured products
         setInstagramPhotos(Array.isArray(instaData) ? instaData : []);
         setLoading(false);
       })
@@ -77,42 +77,49 @@ export default function Home() {
               <p style={{ marginTop: '20px', color: 'var(--text-muted)' }}>Loading products...</p>
             </div>
           ) : products.length > 0 ? (
-            <div className="products-grid">
-              {products.map((product) => {
-                const isSaved = product.mrp > product.price;
-                const discount = isSaved ? Math.round(((product.mrp - product.price) / product.mrp) * 100) : 0;
-                
-                return (
-                  <Link to={`/product/${product._id}`} key={product._id} className="product-card">
-                    <div className="card-img-wrap">
-                      {isSaved && <span className="card-badge">Save {discount}%</span>}
-                      <img
-                        src={product.image.startsWith('http') ? product.image : `/${product.image}`}
-                        alt={product.name}
-                        className="card-img"
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = "https://placehold.co/300x300?text=Premium+Chocolates";
-                        }}
-                      />
-                    </div>
-                    <div className="card-details">
-                      <h3 className="card-title">{product.name}</h3>
-                      <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--luxury-gold)', gap: '2px', marginBottom: '12px' }}>
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} size={14} fill={i < Math.floor(product.adminRating) ? "currentColor" : "none"} />
-                        ))}
-                        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: '6px' }}>({product.adminRating})</span>
+            <>
+              <div className="products-grid">
+                {products.map((product) => {
+                  const isSaved = product.mrp > product.price;
+                  const discount = isSaved ? Math.round(((product.mrp - product.price) / product.mrp) * 100) : 0;
+                  
+                  return (
+                    <Link to={`/product/${product._id}`} key={product._id} className="product-card">
+                      <div className="card-img-wrap">
+                        {isSaved && <span className="card-badge">Save {discount}%</span>}
+                        <img
+                          src={product.image.startsWith('http') ? product.image : `/${product.image}`}
+                          alt={product.name}
+                          className="card-img"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://placehold.co/300x300?text=Premium+Chocolates";
+                          }}
+                        />
                       </div>
-                      <div className="card-price-row">
-                        <span className="card-price">₹{product.price.toFixed(2)}</span>
-                        {isSaved && <span className="card-mrp">₹{product.mrp.toFixed(2)}</span>}
+                      <div className="card-details">
+                        <h3 className="card-title">{product.name}</h3>
+                        <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--luxury-gold)', gap: '2px', marginBottom: '12px' }}>
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} size={14} fill={i < Math.floor(product.adminRating) ? "currentColor" : "none"} />
+                          ))}
+                          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginLeft: '6px' }}>({product.adminRating})</span>
+                        </div>
+                        <div className="card-price-row">
+                          <span className="card-price">₹{product.price.toFixed(2)}</span>
+                          {isSaved && <span className="card-mrp">₹{product.mrp.toFixed(2)}</span>}
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
+                    </Link>
+                  );
+                })}
+              </div>
+              <div style={{ textAlign: 'center', marginTop: '45px' }}>
+                <Link to="/shop" className="btn btn-premium" style={{ borderRadius: '50px', padding: '12px 35px' }}>
+                  See More <ArrowRight size={18} style={{ marginLeft: '6px' }} />
+                </Link>
+              </div>
+            </>
           ) : (
             <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>No products found.</p>
           )}
