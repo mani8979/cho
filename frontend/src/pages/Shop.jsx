@@ -110,7 +110,8 @@ export default function Shop() {
         <div className="shop-layout">
           {/* Categories Sidebar */}
           <aside className="shop-sidebar">
-            <div className="sidebar-sticky glass-card" style={{ padding: '25px' }}>
+            {/* Desktop View: Sidebar List */}
+            <div className="sidebar-sticky glass-card desktop-category-sidebar" style={{ padding: '25px' }}>
               <h3 className="sidebar-title">Collections</h3>
               <div className="category-filter-list">
                 <button
@@ -128,6 +129,27 @@ export default function Shop() {
                     {cat.name} <span>🍫</span>
                   </button>
                 ))}
+              </div>
+            </div>
+
+            {/* Mobile View: Dropdown Selector */}
+            <div className="mobile-category-dropdown-wrap">
+              <label htmlFor="collection-select" className="mobile-dropdown-label">Collections</label>
+              <div className="select-wrapper">
+                <select
+                  id="collection-select"
+                  value={categoryFilter}
+                  onChange={(e) => selectCategory(e.target.value)}
+                  className="mobile-category-select"
+                >
+                  <option value="">All Collections 📦</option>
+                  {categories.map((cat) => (
+                    <option key={cat._id} value={cat.name}>
+                      {cat.name} 🍫
+                    </option>
+                  ))}
+                </select>
+                <div className="select-arrow">▼</div>
               </div>
             </div>
           </aside>
