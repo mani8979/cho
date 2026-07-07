@@ -16,7 +16,7 @@ const orderRateLimiter = rateLimiter({
 // Create new order (Public)
 router.post('/', orderRateLimiter, async (req, res) => {
   try {
-    const { productName, productId, phone, price, quantity, address, pincode, email, paymentScreenshot } = req.body;
+    const { productName, productId, phone, price, quantity, address, pincode, email, paymentScreenshot, paymentMethod } = req.body;
     
     const totalPrice = Number(price) * Number(quantity || 1);
 
@@ -31,7 +31,8 @@ router.post('/', orderRateLimiter, async (req, res) => {
       email: email || '',
       totalPrice,
       status: 'Wait for WhatsApp',
-      paymentScreenshot: paymentScreenshot || ''
+      paymentScreenshot: paymentScreenshot || '',
+      paymentMethod: paymentMethod || 'Online'
     });
 
     const saved = await newOrder.save();

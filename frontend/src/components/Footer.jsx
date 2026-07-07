@@ -10,8 +10,11 @@ export default function Footer() {
         {/* Brand Block */}
         <div>
           <h3 style={{ color: 'var(--luxury-gold)', fontSize: '1.6rem', marginBottom: '15px' }}>LOVE MELT</h3>
-          <p style={{ color: 'rgba(253, 251, 247, 0.75)', fontSize: '0.95rem', lineHeight: '1.7', marginBottom: '20px' }}>
+          <p style={{ color: 'rgba(253, 251, 247, 0.75)', fontSize: '0.95rem', lineHeight: '1.7', marginBottom: '10px' }}>
             Experience the gold standard of premium artisan chocolates handcrafted with love.
+          </p>
+          <p style={{ color: 'var(--luxury-gold)', fontSize: '0.9rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '20px' }}>
+            🚚 Cash on Delivery (COD) Available
           </p>
           <div style={{ display: 'flex', gap: '15px' }}>
             <a href="https://www.instagram.com/love.melt_91?utm_source=qr&igsh=Nzg0bnNyN3MweXh2" target="_blank" rel="noopener noreferrer" style={{ color: 'white' }}>

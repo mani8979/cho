@@ -21,6 +21,7 @@ export default function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [paymentScreenshot, setPaymentScreenshot] = useState('');
   const [uploadingScreenshot, setUploadingScreenshot] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState('online'); // 'online' or 'cod'
 
   // Reviews state
   const [reviews, setReviews] = useState([]);
@@ -147,8 +148,13 @@ export default function ProductDetails() {
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    if (!customerName || !customerPhone || !customerRollNo || !customerClassSec || !customerRoomNo || !paymentScreenshot) {
-      alert('Please fill in all required fields and upload the payment screenshot.');
+    if (!customerName || !customerPhone || !customerRollNo || !customerClassSec || !customerRoomNo) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    if (paymentMethod === 'online' && !paymentScreenshot) {
+      alert('Please upload the payment screenshot.');
       return;
     }
 
@@ -163,7 +169,8 @@ export default function ProductDetails() {
       address: combinedAddress,
       pincode: '',
       email: '',
-      paymentScreenshot: paymentScreenshot
+      paymentScreenshot: paymentMethod === 'online' ? paymentScreenshot : '',
+      paymentMethod: paymentMethod === 'online' ? 'Online' : 'Cash on Delivery'
     };
 
     try {
@@ -187,7 +194,10 @@ export default function ProductDetails() {
         msg += `- Room No: ${customerRoomNo}\n`;
         msg += `- Phone: ${customerPhone}\n`;
         if (customerAltPhone) msg += `- Alternative Phone: ${customerAltPhone}\n`;
-        if (paymentScreenshot) msg += `- Payment Receipt: ${paymentScreenshot}\n`;
+        msg += `- Payment Method: ${paymentMethod === 'online' ? 'Online Payment (UPI/Scan)' : 'Cash on Delivery (COD)'}\n`;
+        if (paymentMethod === 'online' && paymentScreenshot) {
+          msg += `- Payment Receipt: ${paymentScreenshot}\n`;
+        }
         msg += `\nNote: Please confirm my order.`;
 
         const waUrl = `https://wa.me/919063454241?text=${encodeURIComponent(msg)}`;
@@ -278,13 +288,16 @@ export default function ProductDetails() {
                 )}
               </div>
               
-              <div style={{ marginTop: '15px', fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+              <div style={{ marginTop: '15px', fontSize: '0.9rem', color: 'var(--text-muted)', display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'center' }}>
                 {product.weight && <span>⚖️ Weight: <strong>{product.weight}</strong></span>}
                 {product.stockQuantity > 0 ? (
                   <span style={{ color: '#2ecc71', fontWeight: 600 }}>✅ In Stock ({product.stockQuantity} items)</span>
                 ) : (
                   <span style={{ color: '#e74c3c', fontWeight: 600 }}>❌ Out of Stock</span>
                 )}
+                <span style={{ background: 'var(--gold-soft)', color: 'var(--luxury-gold)', padding: '4px 10px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 700, border: '1px solid var(--border-gold)', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                  🚚 Cash on Delivery Available
+                </span>
               </div>
             </div>
 
@@ -320,19 +333,75 @@ export default function ProductDetails() {
                     <X size={20} />
                   </button>
                 </div>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '20px' }}>Scan the QR below to pay, and send the payment screenshot along with your order on WhatsApp.</p>
-                
-                {/* QR Section */}
-                <div className="qr-section">
-                  <p className="qr-title">Scan & Pay</p>
-                  <div className="qr-wrap">
-                    <img src="/images/qr.jpeg" className="qr-img" alt="QR Code" onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "https://placehold.co/200x200?text=Payment+QR";
-                    }} />
-                  </div>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Pay total amount: <strong>₹{product.price.toFixed(2)}</strong></p>
+
+                {/* Payment Method Toggle */}
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                  <button 
+                    type="button"
+                    onClick={() => setPaymentMethod('online')}
+                    style={{
+                      flex: 1,
+                      padding: '10px',
+                      borderRadius: 'var(--radius-sm)',
+                      border: paymentMethod === 'online' ? '2px solid var(--primary-choco)' : '1px solid var(--border-light)',
+                      background: paymentMethod === 'online' ? 'var(--primary-choco)' : 'transparent',
+                      color: paymentMethod === 'online' ? 'white' : 'var(--text-dark)',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    💳 Pay Online
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setPaymentMethod('cod')}
+                    style={{
+                      flex: 1,
+                      padding: '10px',
+                      borderRadius: 'var(--radius-sm)',
+                      border: paymentMethod === 'cod' ? '2px solid var(--primary-choco)' : '1px solid var(--border-light)',
+                      background: paymentMethod === 'cod' ? 'var(--primary-choco)' : 'transparent',
+                      color: paymentMethod === 'cod' ? 'white' : 'var(--text-dark)',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    💵 Cash on Delivery
+                  </button>
                 </div>
+
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '20px' }}>
+                  {paymentMethod === 'online' 
+                    ? 'Scan the QR below to pay, and send the payment screenshot along with your order on WhatsApp.' 
+                    : 'Fill in your details below to place your order with Cash on Delivery via WhatsApp.'}
+                </p>
+                
+                {/* QR Section (Online Payment) */}
+                {paymentMethod === 'online' && (
+                  <div className="qr-section animate-fade-up">
+                    <p className="qr-title">Scan & Pay</p>
+                    <div className="qr-wrap">
+                      <img src="/images/qr.jpeg" className="qr-img" alt="QR Code" onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://placehold.co/200x200?text=Payment+QR";
+                      }} />
+                    </div>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Pay total amount: <strong>₹{product.price.toFixed(2)}</strong></p>
+                  </div>
+                )}
+
+                {/* COD Info Section (Cash on Delivery) */}
+                {paymentMethod === 'cod' && (
+                  <div className="qr-section animate-fade-up" style={{ background: 'var(--gold-soft)', border: '1px solid var(--border-gold)', padding: '20px', borderRadius: 'var(--radius-sm)', textAlign: 'center', marginBottom: '25px' }}>
+                    <p style={{ fontWeight: 700, color: 'var(--primary-choco)', fontSize: '1.05rem' }}>💵 Cash on Delivery Selected</p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '5px' }}>
+                      No online payment is needed right now! You can pay by cash or UPI directly when your order is delivered.
+                    </p>
+                    <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--primary-choco)', marginTop: '10px' }}>Total Payable: <strong>₹{product.price.toFixed(2)}</strong></p>
+                  </div>
+                )}
 
                 <form onSubmit={handlePlaceOrder}>
                   <div className="form-group">
@@ -365,26 +434,28 @@ export default function ProductDetails() {
                     <input type="tel" value={customerAltPhone} onChange={(e) => setCustomerAltPhone(e.target.value)} maxLength="10" placeholder="Optional backup number" />
                   </div>
 
-                  <div className="form-group">
-                    <label>Payment Screenshot *</label>
-                    <div className="file-upload-wrap">
-                      <label htmlFor="screenshot-upload" className="file-upload-btn-label">
-                        <Upload size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
-                        {uploadingScreenshot ? 'Uploading...' : paymentScreenshot ? 'Screenshot Uploaded ✅' : 'Upload Payment Screenshot'}
-                      </label>
-                      <input
-                        type="file"
-                        id="screenshot-upload"
-                        style={{ display: 'none' }}
-                        onChange={handleScreenshotUpload}
-                        accept="image/*"
-                        required
-                      />
+                  {paymentMethod === 'online' && (
+                    <div className="form-group animate-fade-up">
+                      <label>Payment Screenshot *</label>
+                      <div className="file-upload-wrap">
+                        <label htmlFor="screenshot-upload" className="file-upload-btn-label">
+                          <Upload size={18} style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                          {uploadingScreenshot ? 'Uploading...' : paymentScreenshot ? 'Screenshot Uploaded ✅' : 'Upload Payment Screenshot'}
+                        </label>
+                        <input
+                          type="file"
+                          id="screenshot-upload"
+                          style={{ display: 'none' }}
+                          onChange={handleScreenshotUpload}
+                          accept="image/*"
+                          required
+                        />
+                      </div>
+                      {paymentScreenshot && (
+                        <img src={paymentScreenshot.startsWith('http') ? paymentScreenshot : `/${paymentScreenshot}`} alt="Payment Preview" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', marginTop: '10px' }} />
+                      )}
                     </div>
-                    {paymentScreenshot && (
-                      <img src={paymentScreenshot.startsWith('http') ? paymentScreenshot : `/${paymentScreenshot}`} alt="Payment Preview" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px', marginTop: '10px' }} />
-                    )}
-                  </div>
+                  )}
 
                   <div style={{ display: 'flex', gap: '15px', marginTop: '30px' }}>
                     <button type="submit" className="btn btn-whatsapp" style={{ flexGrow: 1 }}>

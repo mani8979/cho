@@ -46,6 +46,10 @@ const OrderSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  paymentMethod: {
+    type: String,
+    default: 'Online'
+  },
   createdAt: {
     type: Date,
     default: Date.now
