@@ -144,7 +144,11 @@ router.put('/:id', protectAdmin, async (req, res) => {
 
     product.name = name || product.name;
     product.price = price !== undefined ? Number(price) : product.price;
-    product.mrp = mrp !== undefined ? Number(mrp) : product.mrp;
+    if (mrp === null || mrp === '' || mrp === 0) {
+      product.mrp = undefined;
+    } else if (mrp !== undefined) {
+      product.mrp = Number(mrp);
+    }
     if (image !== undefined) product.image = image;
     if (galleryImages !== undefined) product.galleryImages = galleryImages;
     product.description = description !== undefined ? description : product.description;

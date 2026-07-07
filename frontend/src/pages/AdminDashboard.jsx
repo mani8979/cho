@@ -213,7 +213,7 @@ export default function AdminDashboard() {
     const payload = {
       name: prodName,
       price: Number(prodPrice),
-      mrp: prodMrp ? Number(prodMrp) : undefined,
+      mrp: (prodMrp !== '' && prodMrp !== null && prodMrp !== undefined && Number(prodMrp) !== 0) ? Number(prodMrp) : null,
       image: prodImage,
       galleryImages: prodGallery,
       description: prodDesc,
