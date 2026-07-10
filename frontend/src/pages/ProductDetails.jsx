@@ -22,6 +22,8 @@ export default function ProductDetails() {
   const [paymentScreenshot, setPaymentScreenshot] = useState('');
   const [uploadingScreenshot, setUploadingScreenshot] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('online'); // 'online' or 'cod'
+  const [deliveryLocation, setDeliveryLocation] = useState('in'); // 'in' or 'out'
+  const [customerAddress, setCustomerAddress] = useState('');
 
   // Reviews state
   const [reviews, setReviews] = useState([]);
@@ -148,9 +150,16 @@ export default function ProductDetails() {
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
-    if (!customerName || !customerPhone || !customerRollNo || !customerClassSec || !customerRoomNo) {
-      alert('Please fill in all required fields.');
-      return;
+    if (deliveryLocation === 'in') {
+      if (!customerName || !customerPhone || !customerRollNo || !customerClassSec || !customerRoomNo) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+    } else {
+      if (!customerName || !customerPhone || !customerAddress) {
+        alert('Please fill in all required fields.');
+        return;
+      }
     }
 
     if (paymentMethod === 'online' && !paymentScreenshot) {
@@ -158,7 +167,9 @@ export default function ProductDetails() {
       return;
     }
 
-    const combinedAddress = `Roll No: ${customerRollNo}, Class/Sec: ${customerClassSec}, Room No: ${customerRoomNo}${customerAltPhone ? `, Alt Phone: ${customerAltPhone}` : ''}`;
+    const combinedAddress = deliveryLocation === 'in'
+      ? `Roll No: ${customerRollNo}, Class/Sec: ${customerClassSec}, Room No: ${customerRoomNo}${customerAltPhone ? `, Alt Phone: ${customerAltPhone}` : ''}`
+      : `Address: ${customerAddress}${customerAltPhone ? `, Alt Phone: ${customerAltPhone}` : ''}`;
 
     const orderData = {
       productName: product.name,
@@ -188,10 +199,15 @@ export default function ProductDetails() {
         msg += `Product: ${product.name}\n`;
         msg += `Price: Rs. ${product.price.toFixed(2)}\n\n`;
         msg += `Customer Details:\n`;
+        msg += `- Location: ${deliveryLocation === 'in' ? 'In College' : 'Out of College'}\n`;
         msg += `- Name: ${customerName}\n`;
-        msg += `- Roll Number: ${customerRollNo}\n`;
-        msg += `- Class, Sec: ${customerClassSec}\n`;
-        msg += `- Room No: ${customerRoomNo}\n`;
+        if (deliveryLocation === 'in') {
+          msg += `- Roll Number: ${customerRollNo}\n`;
+          msg += `- Class, Sec: ${customerClassSec}\n`;
+          msg += `- Room No: ${customerRoomNo}\n`;
+        } else {
+          msg += `- Address: ${customerAddress}\n`;
+        }
         msg += `- Phone: ${customerPhone}\n`;
         if (customerAltPhone) msg += `- Alternative Phone: ${customerAltPhone}\n`;
         msg += `- Payment Method: ${paymentMethod === 'online' ? 'Online Payment (UPI/Scan)' : 'Cash on Delivery (COD)'}\n`;
@@ -404,25 +420,93 @@ export default function ProductDetails() {
                 )}
 
                 <form onSubmit={handlePlaceOrder}>
+                  {/* Delivery Location Selector */}
+                  <div style={{ marginBottom: '20px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600 }}>Delivery Location *</label>
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <button 
+                        type="button"
+                        onClick={() => setDeliveryLocation('in')}
+                        style={{
+                          flex: 1,
+                          padding: '10px',
+                          borderRadius: 'var(--radius-sm)',
+                          border: deliveryLocation === 'in' ? '2px solid var(--primary-choco)' : '1px solid var(--border-light)',
+                          background: deliveryLocation === 'in' ? 'var(--primary-choco)' : 'transparent',
+                          color: deliveryLocation === 'in' ? 'white' : 'var(--text-dark)',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        🏫 In College
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={() => setDeliveryLocation('out')}
+                        style={{
+                          flex: 1,
+                          padding: '10px',
+                          borderRadius: 'var(--radius-sm)',
+                          border: deliveryLocation === 'out' ? '2px solid var(--primary-choco)' : '1px solid var(--border-light)',
+                          background: deliveryLocation === 'out' ? 'var(--primary-choco)' : 'transparent',
+                          color: deliveryLocation === 'out' ? 'white' : 'var(--text-dark)',
+                          fontWeight: '600',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        🏠 Out of College
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="form-group">
                     <label>Name *</label>
                     <input type="text" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required placeholder="Enter your name" />
                   </div>
                   
-                  <div className="form-group">
-                    <label>Roll number *</label>
-                    <input type="text" value={customerRollNo} onChange={(e) => setCustomerRollNo(e.target.value)} required placeholder="Enter roll number" />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Class, sec *</label>
-                    <input type="text" value={customerClassSec} onChange={(e) => setCustomerClassSec(e.target.value)} required placeholder="e.g. CSE-A, Class 10-B" />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Room no *</label>
-                    <input type="text" value={customerRoomNo} onChange={(e) => setCustomerRoomNo(e.target.value)} required placeholder="Hostel room number" />
-                  </div>
+                  {deliveryLocation === 'in' ? (
+                    <div className="animate-fade-up" style={{ display: 'contents' }}>
+                      <div className="form-group">
+                        <label>Roll number *</label>
+                        <input type="text" value={customerRollNo} onChange={(e) => setCustomerRollNo(e.target.value)} required={deliveryLocation === 'in'} placeholder="Enter roll number" />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label>Class, sec *</label>
+                        <input type="text" value={customerClassSec} onChange={(e) => setCustomerClassSec(e.target.value)} required={deliveryLocation === 'in'} placeholder="e.g. CSE-A, Class 10-B" />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label>Room no *</label>
+                        <input type="text" value={customerRoomNo} onChange={(e) => setCustomerRoomNo(e.target.value)} required={deliveryLocation === 'in'} placeholder="Hostel room number" />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="form-group animate-fade-up">
+                      <label>Address *</label>
+                      <textarea 
+                        value={customerAddress} 
+                        onChange={(e) => setCustomerAddress(e.target.value)} 
+                        required={deliveryLocation === 'out'} 
+                        placeholder="Enter your complete delivery address (Street, Landmark, City)"
+                        rows="3"
+                        style={{
+                          width: '100%',
+                          padding: '12px',
+                          borderRadius: 'var(--radius-sm)',
+                          border: '1px solid var(--border-light)',
+                          background: 'white',
+                          color: 'var(--text-dark)',
+                          fontSize: '0.95rem',
+                          fontFamily: 'inherit',
+                          resize: 'vertical',
+                          boxSizing: 'border-box'
+                        }}
+                      />
+                    </div>
+                  )}
                   
                   <div className="form-group">
                     <label>Ph.no *</label>
